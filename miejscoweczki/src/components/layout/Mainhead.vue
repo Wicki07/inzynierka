@@ -2,14 +2,14 @@
   <v-app-bar  app flat dark class="navy">
     <v-row>
       <v-btn 
-        text
+        text :to="'/login'"
       >
         Zaloguj
       </v-btn>
       <v-btn 
-        text :to="'/logout'"
+        text :to="'/register'"
       >
-        Wyloguj
+        Rejestracja
       </v-btn>
       <v-btn text >Opcje</v-btn>
     </v-row>
