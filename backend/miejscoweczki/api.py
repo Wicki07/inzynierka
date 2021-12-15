@@ -1,8 +1,10 @@
-from rest_framework import generics, permissions, serializers
+from rest_framework import generics, permissions, serializers, viewsets
 from rest_framework.response import Response
 from knox.models import AuthToken
 from rest_framework.utils import serializer_helpers
-from .serializers import LoginSerializer, UserSerializer, RegisterSerializer
+from .serializers import LoginSerializer, UserSerializer, RegisterSerializer, UsersActivatedSerializer
+from .models import *
+from django.contrib.auth import get_user_model
 
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -34,3 +36,24 @@ class UserAPI(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+class UsersActivationAccountViewSet(generics.RetrieveAPIView):
+
+    authentication_classes = []
+    permission_classes = []
+
+    serializer_class = UsersActivatedSerializer
+
+    default_serializer_class = UsersActivatedSerializer
+    
+    def get_object(self):
+        activation = UserActivate.objects.filter(activate_code=self.request.query_params.get('code'))
+        user = get_user_model().objects.none()
+        if(activation):
+            user = [a.user_id for a in activation]
+            # Aktywujemy konto użytkownika
+            user[0].is_active = True
+            user[0].save()
+            # Usuwamy kod aktywacyjny
+            activation.delete()
+        return user

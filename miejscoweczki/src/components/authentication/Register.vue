@@ -32,7 +32,8 @@
     </v-container>
 </template>
 <script>
-import axios from 'axios'
+import {axiosAPI} from '../../axiosAPI';
+import { mapActions } from "vuex"
 export default {
     data(){
         return {
@@ -43,13 +44,15 @@ export default {
         }
     },
     methods: {
+        ...mapActions(["setUser"]),
         register(){
-            axios.post("http://127.0.0.1:8000/api/auth/register",{
+            axiosAPI.post("http://127.0.0.1:8000/api/auth/register",{
                 username: this.username,
                 email: this.email,
                 password: this.password
             }).then(res => {
-                console.log(res)
+                localStorage.setItem('token', res.data.token);
+                this.setUser(res.data.user)
             }).catch(res => {
                 console.log(res)
             })
