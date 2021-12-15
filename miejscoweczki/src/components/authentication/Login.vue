@@ -20,42 +20,37 @@
             <v-btn
                 color="succes"
                 @click="logout"
-            >Zaloguj
+            >Wyloguj
             </v-btn>
         </v-card>
     </v-container>
 </template>
 <script>
-import axios from 'axios'
+import {axiosAPI} from '../../axiosAPI';
+import { mapActions } from "vuex"
 export default {
     data(){
         return {
             username: "",
             password: "",
-            token: "",
         }
     },
     methods: {
+        ...mapActions(["setUser"]),
         login(){
-            axios.post("http://127.0.0.1:8000/api/auth/login",{
+            axiosAPI.post("http://127.0.0.1:8000/api/auth/login",{
                 username: this.username,
                 password: this.password
             }).then(res => {
                 localStorage.setItem('token', res.data.token);
-                this.token = res.data.token
+                this.setUser(res.data.user)
             }).catch(err => {
                 console.log("err")
                 console.log(err)
             })
         },
         logout(){
-            let config = {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }
-            config.headers["Authorization"] = `Token ${this.token}`
-            axios.get("http://127.0.0.1:8000/api/auth/logout", config).then(res => {
+            axiosAPI.get("http://127.0.0.1:8000/api/auth/logout").then(res => {
                 console.log(res.data)
             }).catch(err => {
                 console.log("err")

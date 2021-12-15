@@ -11,6 +11,8 @@
 <script>
 import mainfooter from './components/layout/Mainfoot';
 import mainheader from './components/layout/Mainhead';
+import {axiosAPI} from './axiosAPI';
+import { mapActions } from "vuex"
 
 export default {
   name: 'App',
@@ -24,5 +26,20 @@ export default {
     
     
   }),
+  methods: {
+    ...mapActions(["setUser"])
+  },
+  created(){
+    // sprawdzenie czy refresh token istnieje
+    console.log(localStorage.getItem('token'))
+    if(localStorage.getItem('token')){
+      axiosAPI.get('/api/auth/user').then(res => {
+        this.setUser(res.data)
+      })
+    }
+    else{
+      return
+    }
+  },
 };
 </script>
