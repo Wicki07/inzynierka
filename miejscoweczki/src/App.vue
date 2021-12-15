@@ -35,7 +35,7 @@ export default {
     if(localStorage.getItem('token')){
       axiosAPI.get('/api/auth/user').then(res => {
         this.setUser(res.data)
-      })
+      }).catch(err =>{err})
     }
     else{
       return

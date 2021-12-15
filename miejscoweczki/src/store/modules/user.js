@@ -1,7 +1,8 @@
 export default {
     state: () => ({
         username: "",
-        email: ""
+        email: "",
+        isAuthenticated: false
     }),
     getters: {
 
@@ -10,10 +11,12 @@ export default {
         setUser(state, user) {
             state.username = user.username
             state.email = user.email
+            state.isAuthenticated = true
         },
         resetUser(state) {
             state.username = ""
             state.email = ""
+            state.isAuthenticated = false
         }
     },
     actions: {

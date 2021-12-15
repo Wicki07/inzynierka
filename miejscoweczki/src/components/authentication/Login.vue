@@ -17,16 +17,11 @@
                 @click="login"
             >Zaloguj
             </v-btn>
-            <v-btn
-                color="succes"
-                @click="logout"
-            >Wyloguj
-            </v-btn>
         </v-card>
     </v-container>
 </template>
 <script>
-import {axiosAPI} from '../../axiosAPI';
+import axios from 'axios'
 import { mapActions } from "vuex"
 export default {
     data(){
@@ -36,9 +31,9 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["setUser"]),
+        ...mapActions(["setUser", "resetUser"]),
         login(){
-            axiosAPI.post("http://127.0.0.1:8000/api/auth/login",{
+            axios.post("http://127.0.0.1:8000/api/auth/login",{
                 username: this.username,
                 password: this.password
             }).then(res => {
@@ -49,14 +44,6 @@ export default {
                 console.log(err)
             })
         },
-        logout(){
-            axiosAPI.get("http://127.0.0.1:8000/api/auth/logout").then(res => {
-                console.log(res.data)
-            }).catch(err => {
-                console.log("err")
-                console.log(err)
-            })
-        }
     }
 }
 </script>
