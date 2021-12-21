@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar  app flat dark class="navy">
+  <v-app-bar  app flat dark class="blue">
     <v-row>
       <v-btn v-if="!isAuthenticated"
         text :to="'/login'"

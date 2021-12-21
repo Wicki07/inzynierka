@@ -1,4 +1,4 @@
 from django.contrib import admin
-import miejscoweczki.timers
+import Authentication.timers
 
 # Register your models here.

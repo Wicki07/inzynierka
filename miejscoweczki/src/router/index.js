@@ -5,6 +5,8 @@ import Register from '../components/authentication/Register.vue'
 import Login from '../components/authentication/Login.vue'
 import Activate from '../components/authentication/Activate.vue'
 
+import AddPlace from '../components/post/AddPlace.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -26,6 +28,11 @@ const routes = [
     path: '/activate/:code',
     name: 'Activate',
     component: Activate,
+  },
+  {
+    path: '/addplace',
+    name: 'AddPlace',
+    component: AddPlace,
   },
 ]
 

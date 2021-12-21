@@ -43,9 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'miejscoweczki',
+    'Authentication',
     'rest_framework',
     'corsheaders',
+    'places',
     'rest_framework_simplejwt.token_blacklist',
     'knox',
 ]
@@ -143,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'pl-pl'
+LANGUAGE_CODE = 'pl'
 
 TIME_ZONE = 'Europe/Warsaw'
 
@@ -180,3 +181,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'projektnzi@gmail.com'
 EMAIL_HOST_PASSWORD = 'xwaauukvwdrgveul'
 EMAIL_USE_TLS = True
+
+MEDIA_URL = '/files/'
+MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'files'))

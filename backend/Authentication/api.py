@@ -5,6 +5,7 @@ from rest_framework.utils import serializer_helpers
 from .serializers import LoginSerializer, UserSerializer, RegisterSerializer, UsersActivatedSerializer
 from .models import *
 from django.contrib.auth import get_user_model
+from rest_framework import status
 
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -56,4 +57,6 @@ class UsersActivationAccountViewSet(generics.RetrieveAPIView):
             user[0].save()
             # Usuwamy kod aktywacyjny
             activation.delete()
-        return user
+            return user
+        else:
+            return Response({'message': '{} Konto zostało już aktywowane'}, status=status.HTTP_204_NO_CONTENT)

@@ -1,7 +1,7 @@
 <template>
     <v-footer
     dark
-      color="navy"
+      color="blue"
       app
       class="font-weight-medium"
     >
