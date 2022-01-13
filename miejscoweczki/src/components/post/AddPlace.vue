@@ -33,6 +33,7 @@
                     @change="onAddFiles"
                 ></v-file-input>
             </div>
+            <div id="map" style="height: 360px; width: 640px;"></div>
             <v-btn
                 color="success"
                 @click="addPost"
@@ -43,6 +44,7 @@
 </template>
 <script>
 import {axiosAPI} from '../../axiosAPI';
+import { Loader } from '@googlemaps/js-api-loader';
 export default {
     data(){
         return {
@@ -65,7 +67,41 @@ export default {
                     return !hasDuplicates || 'Dodano już podany plik'},
                 v => !v || !v.some(value => !this.allowedTypes.includes(value.type)) || 'Podano niewłaściwy format pliku. Dopuszczalne formaty: png, jpg, jpeg, bmp, img',
             ],
+            loader: new Loader({
+                apiKey: "AIzaSyAp_-toJueZxOObe0RxxmXvVyoS_jW4CQU",
+                version: "weekly",
+                libraries: ["places"]
+            }),
+            mapOptions: {
+                center: {
+                    lat: 0,
+                    lng: 0
+                },
+                zoom: 4
+            }
         }
+    },
+    async mounted() {
+        this.loader
+            .load()
+            .then((google) => {
+                const map = new google.maps.Map(document.getElementById("map"), this.mapOptions);
+                map.addListener("click", (mapsMouseEvent) => {
+                    let infoWindow = new google.maps.InfoWindow({
+                        position: mapsMouseEvent.latLng,
+                    });
+                    console.log(infoWindow)
+                    console.log(mapsMouseEvent)
+                    new google.maps.Marker({
+                        position: mapsMouseEvent.latLng,
+                        map,
+                        title: "Hello World!",
+                    });
+                });
+            })
+            .catch(()=> {
+                // do something
+            });
     },
     methods: {
         addPost(){
@@ -93,11 +129,6 @@ export default {
             if(files.length == 0){
                 this.convertedImages = []
             }
-            // console.log(this.images)
-            // console.log(files)
-            // console.log(!files || !files.some(value => this.images.some(img => img.name == value.name)) || 'Dodano już podany plik')
-            // console.log(!files)
-            // console.log(!files.some(value => this.images.some(img => img.name == value.name)))
             files.forEach((file) => {
                 const reader = new FileReader()
                 reader.readAsArrayBuffer(file);
