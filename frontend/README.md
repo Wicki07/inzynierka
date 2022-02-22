@@ -1,4 +1,4 @@
-# miejscoweczki
+# frontend
 
 ## Project setup
 ```

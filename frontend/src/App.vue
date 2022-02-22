@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import mainfooter from './components/layout/Mainfoot';
-import mainheader from './components/layout/Mainhead';
+import mainfooter from './views/Mainfoot';
+import mainheader from './views/Mainhead';
 import {axiosAPI} from './axiosAPI';
 import { mapActions } from "vuex"
 
