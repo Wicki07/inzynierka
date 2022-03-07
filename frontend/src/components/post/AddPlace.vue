@@ -25,14 +25,18 @@
           @change="onAddFiles"
         ></v-file-input>
       </div>
-      <div id="map" style="height: 360px; width: 640px"></div>
       <v-btn color="success" @click="addPost">dodaj </v-btn>
     </v-card>
+    <map-test></map-test>
   </v-container>
 </template>
 <script>
 import { axiosAPI } from "@/axiosAPI";
+import MapTest from "./MapTest.vue";
 export default {
+  components: {
+    MapTest,
+  },
   data() {
     return {
       localization: "",
