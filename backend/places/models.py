@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 def upload_path(instance, filename):
 
-    return '/'.join(['posts',str(instance.post_id.id),filename])
+    return '/'.join(['posts',str(instance.post_id),filename])
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

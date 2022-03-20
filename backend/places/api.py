@@ -9,6 +9,7 @@ from rest_framework import status
 from knox.auth import TokenAuthentication
 from django.core.files import File
 import urllib
+from django.contrib.auth import get_user_model
 
 class PostAPI(generics.GenericAPIView):
     serializer_class = PostSerializer
@@ -21,14 +22,16 @@ class PostAPI(generics.GenericAPIView):
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
+        user = get_user_model().objects.filter(username=request.user).first()
+        print(user)
         post = Post.objects.create(
-            user_id=request.user, 
+            user_id=user.id, 
             description=request.data['description'], 
             localization=request.data['localization'], 
             category=request.data['category']
         )
         for f in request.FILES.getlist('images'):
-            Attachment.objects.create(post_id=post, image=f)
+            Attachment.objects.create(post_id=post.id, image=f)
         return Response({'message': '{} Post został dodany'}, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
