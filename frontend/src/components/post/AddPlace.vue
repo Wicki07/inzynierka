@@ -22,7 +22,7 @@
       </div>
       <v-btn color="success" @click="addPost">dodaj </v-btn>
     </v-card>
-    <localization-select ref="localizationselect"/>
+    <localization-select ref="localizationselect" />
   </v-container>
 </template>
 <script>
@@ -62,7 +62,10 @@ export default {
   methods: {
     addPost() {
       const formData = new FormData();
-      formData.append("localization", this.$refs.localizationselect.markerLatLng);
+      formData.append(
+        "localization",
+        this.$refs.localizationselect.markerLatLng
+      );
       formData.append("category", this.category);
       formData.append("description", this.description);
       this.convertedImages.forEach((image) => {
@@ -100,12 +103,13 @@ export default {
               .then((r) => r.blob())
               .then(
                 (blobFile) =>
-                  new File([blobFile], self.imgName(), { type: "image/png" })
+                  new File([blobFile], self.imgName() + '.jpg', { type: "image/jpeg" })
               );
             self.convertedImages.push(file);
           };
         };
       });
+      console.log(this.convertedImages);
     },
     resizeMe(img) {
       var canvas = document.createElement("canvas");
