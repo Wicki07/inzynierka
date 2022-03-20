@@ -3,11 +3,6 @@
     <v-card>
       <v-text-field
         class="mt-5"
-        v-model="localization"
-        label="Lokalizacja"
-      ></v-text-field>
-      <v-text-field
-        class="mt-5"
         v-model="category"
         label="Kategoria"
       ></v-text-field>
@@ -27,15 +22,15 @@
       </div>
       <v-btn color="success" @click="addPost">dodaj </v-btn>
     </v-card>
-    <map-test></map-test>
+    <localization-select ref="localizationselect"/>
   </v-container>
 </template>
 <script>
 import { axiosAPI } from "@/axiosAPI";
-import MapTest from "./MapTest.vue";
+import LocalizationSelect from "./LocalizationSelect.vue";
 export default {
   components: {
-    MapTest,
+    LocalizationSelect,
   },
   data() {
     return {
@@ -67,7 +62,7 @@ export default {
   methods: {
     addPost() {
       const formData = new FormData();
-      formData.append("localization", this.localization);
+      formData.append("localization", this.$refs.localizationselect.markerLatLng);
       formData.append("category", this.category);
       formData.append("description", this.description);
       this.convertedImages.forEach((image) => {
@@ -80,10 +75,6 @@ export default {
             ...axiosAPI.headers,
             "content-type": "multipart/form-data",
           },
-        })
-        .then((res) => {
-          localStorage.setItem("token", res.data.token);
-          this.setUser(res.data.user);
         })
         .catch((err) => {
           console.log("err");

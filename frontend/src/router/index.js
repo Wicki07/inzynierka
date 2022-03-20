@@ -6,7 +6,6 @@ import Login from "../components/authentication/Login.vue";
 import Activate from "../components/authentication/Activate.vue";
 
 import AddPlace from "../components/post/AddPlace.vue";
-import Map from "../components/post/MapTest.vue";
 
 Vue.use(VueRouter);
 
@@ -31,11 +30,6 @@ const routes = [
     path: "/addplace",
     name: "AddPlace",
     component: AddPlace,
-  },
-  {
-    path: "/map",
-    name: "Map",
-    component: Map,
   },
 ];
 
