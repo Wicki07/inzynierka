@@ -103,7 +103,9 @@ export default {
               .then((r) => r.blob())
               .then(
                 (blobFile) =>
-                  new File([blobFile], self.imgName() + '.jpg', { type: "image/jpeg" })
+                  new File([blobFile], self.imgName() + ".jpg", {
+                    type: "image/jpeg",
+                  })
               );
             self.convertedImages.push(file);
           };

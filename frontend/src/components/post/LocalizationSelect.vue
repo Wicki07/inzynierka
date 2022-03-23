@@ -54,13 +54,17 @@ export default {
       bounds: null,
       markerLatLng: [0, 0],
       markerAdded: false,
+      markerLabel: ""
     };
   },
   methods: {
-    handleClick(e) {
+    async handleClick(e) {
+      const provider = new OpenStreetMapProvider();
       this.markerAdded = true;
       this.markerLatLng = [e.latlng.lat, e.latlng.lng];
       this.center = [e.latlng.lat, e.latlng.lng];
+      const results = await provider.search({ query:  e.latlng.lat + ', ' + e.latlng.lng});
+      this.markerLabel = results[0].label
     },
     mapReady() {
       var map = this.$refs.myMap.mapObject;
@@ -73,6 +77,7 @@ export default {
         this.markerAdded = true;
         this.markerLatLng = [t.y, t.x];
         this.center = [t.y, t.x];
+        this.markerLabel = t.label
       };
       map.addControl(search);
     },
