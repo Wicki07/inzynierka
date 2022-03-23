@@ -27,12 +27,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         generated_activate_key = ''.join(random.choice(generated_activate_key_chars) for _ in range(generated_activate_key_size))
         models.UserActivate.objects.create(user_id=user,activate_code=generated_activate_key)
         subject = force_text('Aktywacja konta w serwisie Miejscóweczki.')
-        from_mail = force_text('Miejscóweczki')
+        from_mail = force_text('miejscoweczki@test.pl')
         message = render_to_string('mail/activate.html', {
             'user': user,
             'activate_link': 'http://localhost:8080/activate/' + generated_activate_key
         })
-        email = EmailMultiAlternatives( subject, message, from_email=from_mail, to=[user.email])
+        email = EmailMultiAlternatives( subject, message, from_mail, [user.email])
         email.mixed_subtype = 'related'
         email.attach_alternative(message, "text/html")
         email.send()
