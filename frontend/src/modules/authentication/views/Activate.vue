@@ -4,7 +4,7 @@
   </v-container>
 </template>
 <script>
-import { axiosAPI } from "../../axiosAPI";
+import { axiosAPI } from "../../../axiosAPI";
 export default {
   data() {},
   methods: {},

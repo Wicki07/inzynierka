@@ -6,6 +6,16 @@ import vuetify from "./plugins/vuetify";
 import 'leaflet/dist/leaflet.css';
 import '../node_modules/leaflet-geosearch/dist/geosearch.css';
 
+import postsModule from "./modules/posts";
+import authenticationModule from "./modules/authentication";
+
+import { registerModules } from "./register-modules";
+
+registerModules({
+  posts: postsModule,
+  authentication: authenticationModule,
+});
+
 Vue.config.productionTip = false;
 
 new Vue({
