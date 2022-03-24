@@ -27,7 +27,7 @@
 </template>
 <script>
 import { axiosAPI } from "@/axiosAPI";
-import LocalizationSelect from "./LocalizationSelect.vue";
+import LocalizationSelect from "../components/LocalizationSelect.vue";
 export default {
   components: {
     LocalizationSelect,
