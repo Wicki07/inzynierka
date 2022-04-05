@@ -27,7 +27,11 @@ class PostAPI(generics.GenericAPIView):
         post = Post.objects.create(
             user_id=user.id, 
             description=request.data['description'], 
-            localization=request.data['localization'], 
+            street=request.data['street'], 
+            city=request.data['city'], 
+            post_code=request.data['post_code'], 
+            state=request.data['state'], 
+            country=request.data['country'], 
             category=request.data['category']
         )
         for f in request.FILES.getlist('images'):

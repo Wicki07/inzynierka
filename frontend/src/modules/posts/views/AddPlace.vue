@@ -61,17 +61,10 @@ export default {
   },
   methods: {
     addPost() {
-      const formData = new FormData();
-      formData.append(
-        "localization",
-        this.$refs.localizationselect.markerLatLng
-      );
-      formData.append("category", this.category);
-      formData.append("description", this.description);
+      const formData = this.preprareFromData()
       this.convertedImages.forEach((image) => {
         formData.append("images", image, image.name);
       });
-      console.log(formData.getAll("images"));
       axiosAPI
         .post("/api/post", formData, {
           headers: {
@@ -83,6 +76,28 @@ export default {
           console.log("err");
           console.log(err);
         });
+    },
+    preprareFromData() {
+      const formData = new FormData();
+      const markerLabel = this.$refs.localizationselect.markerLabel.split(", ")
+      const labelLength = markerLabel.length
+      formData.append(
+        "localization",
+        this.$refs.localizationselect.markerLatLng
+      );
+      formData.append("category", this.category);
+      formData.append("description", this.description);
+      formData.append("country", markerLabel[labelLength - 1]);
+      formData.append("post_code", markerLabel[labelLength - 2]);
+      formData.append("state", markerLabel[labelLength - 3]);
+      formData.append("city", markerLabel[labelLength - 6]);
+      if (labelLength > 7) {
+        const street = labelLength === 8 ? markerLabel[0] : `${markerLabel[0]} ${markerLabel[1]}`
+        formData.append("street", street);
+      } else {
+        formData.append("street", null);
+      }
+      return formData
     },
     onAddFiles(files) {
       if (files.length == 0) {
