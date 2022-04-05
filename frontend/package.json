@@ -7,6 +7,23 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ],
+    "**/*.vue": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "dependencies": {
     "axios": "^0.26.0",
     "core-js": "^3.6.5",
@@ -66,13 +83,13 @@
     "last 2 versions",
     "not dead"
   ],
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,vue}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  }
+  // "gitHooks": {
+  //   "pre-commit": "lint-staged"
+  // },
+  // "lint-staged": {
+  //   "*.{js,jsx,vue}": [
+  //     "vue-cli-service lint",
+  //     "git add"
+  //   ]
+  // }
 }
