@@ -11,6 +11,7 @@ class Post(models.Model):
     localization = models.CharField(max_length=200, blank=False, default='')
     street = models.CharField(max_length=200, blank=True, default='')
     city = models.CharField(max_length=200, blank=True, default='')
+    post_code = models.CharField(max_length=200, blank=True, default='')
     state = models.CharField(max_length=200, blank=True, default='')
     country = models.CharField(max_length=200, blank=True, default='')
     category = models.CharField(max_length=200, blank=False, default='')
