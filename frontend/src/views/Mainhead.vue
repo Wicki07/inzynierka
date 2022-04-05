@@ -1,8 +1,8 @@
 <template>
   <v-app-bar app flat dark class="blue">
     <v-row>
-      <v-btn v-if="!isAuthenticated" text :to="'/login'"> Zaloguj </v-btn>
-      <v-btn v-if="!isAuthenticated" text :to="'/register'">
+      <v-btn v-if="!isAuthenticated" text :to="'/auth/login'"> Zaloguj </v-btn>
+      <v-btn v-if="!isAuthenticated" text :to="'/auth/register'">
         Rejestracja
       </v-btn>
       <v-btn v-if="isAuthenticated" text @click="logout">Wyloguj</v-btn>
