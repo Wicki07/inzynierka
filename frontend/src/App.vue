@@ -1,8 +1,12 @@
 <template>
   <v-app dark>
     <mainheader></mainheader>
-    <v-main style="padding:64px 0 32px;position:fixed;bottom:0;top:0;width:100%">
+    <v-main>
+      <v-container fluid>
+
+      <!-- If using vue-router -->
       <router-view></router-view>
+    </v-container>
     </v-main>
     <mainfooter></mainfooter>
   </v-app>
