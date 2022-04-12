@@ -6,6 +6,11 @@
         v-model="category"
         label="Kategoria"
       ></v-text-field>
+      <v-text-field
+        class="mt-5"
+        v-model="title"
+        label="Tytuł"
+      ></v-text-field>
       <v-textarea class="mt-5" v-model="description" label="Opis"></v-textarea>
       <div @dragover="dragover" @dragleave="dragleave" @drop="drop">
         <v-file-input
@@ -35,6 +40,7 @@ export default {
   data() {
     return {
       localization: "",
+      title: "",
       category: "",
       description: "",
       images: [],
@@ -79,24 +85,20 @@ export default {
     },
     preprareFromData() {
       const formData = new FormData();
-      const markerLabel = this.$refs.localizationselect.markerLabel.split(", ")
-      const labelLength = markerLabel.length
+      const markerLabel = this.$refs.localizationselect.markerLabel
       formData.append(
         "localization",
         this.$refs.localizationselect.markerLatLng
       );
       formData.append("category", this.category);
+      formData.append("title", this.title);
       formData.append("description", this.description);
-      formData.append("country", markerLabel[labelLength - 1]);
-      formData.append("post_code", markerLabel[labelLength - 2]);
-      formData.append("state", markerLabel[labelLength - 3]);
-      formData.append("city", markerLabel[labelLength - 6]);
-      if (labelLength > 7) {
-        const street = labelLength === 8 ? markerLabel[0] : `${markerLabel[0]} ${markerLabel[1]}`
-        formData.append("street", street);
-      } else {
-        formData.append("street", null);
-      }
+      formData.append("country", markerLabel.country);
+      formData.append("post_code", markerLabel.postcode);
+      formData.append("state", markerLabel.state);
+      formData.append("city", markerLabel.city || markerLabel.village || markerLabel.town);
+      const street = `${markerLabel.road || ''} ${markerLabel.house_number || '' }`
+      formData.append("street", street.trim());
       return formData
     },
     onAddFiles(files) {

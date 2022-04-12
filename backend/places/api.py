@@ -26,6 +26,8 @@ class PostAPI(generics.GenericAPIView):
         print(user)
         post = Post.objects.create(
             user_id=user.id, 
+            localization=request.data['localization'], 
+            title=request.data['title'], 
             description=request.data['description'], 
             street=request.data['street'], 
             city=request.data['city'], 
