@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
@@ -43,4 +43,28 @@ class PostAPI(generics.GenericAPIView):
     def delete(self, request, *args, **kwargs):
         count = Post.objects.all().delete()
         return Response({'message': '{} Post został usunięty'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
+    
+    def findPlaces(self, request, *args, **kwargs):
+        print(request)
+        posts = Post.objects.filter(username=request.user).all()
+        return Response(posts)
 
+class PostsViewSet(viewsets.ModelViewSet):
+    queryset = get_user_model().objects.none()
+    
+    # Lista serializerii dla danech typów zapytań
+    serializer_classes = {
+        'GET': PostSerializer,
+    }
+
+    # Jeżeli danego zapytania nie ma na liście serializer_classes to wykorzystany będzie domyślny
+    default_serializer_class = PostSerializer
+    
+    # Metoda przygotowuje nam dane do zwrócenia - my potrzebujemy informacji o jednym użytkowniku
+    def get_queryset(self):
+        posts = Post.objects.filter(state="województwo " + str(self.request.query_params.get('state')))
+        return posts
+
+    # Metoda wybiera z jakiego serializera będziemy korzystać
+    def get_serializer_class(self):
+        return self.serializer_classes.get(self.action, self.default_serializer_class)
