@@ -14,11 +14,14 @@
         :lat-lng="markerLatLng"
       ></l-marker>
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-      <v-locatecontrol :options="{
-    position: 'topright',
-    strings: {
-        title: 'Twoja lokalizacja',
-    }}"/>
+      <v-locatecontrol
+        :options="{
+          position: 'topright',
+          strings: {
+            title: 'Twoja lokalizacja',
+          },
+        }"
+      />
     </l-map>
   </div>
 </template>
@@ -27,7 +30,8 @@
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import L from "leaflet";
 import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
-import Vue2LeafletLocatecontrol from 'vue2-leaflet-locatecontrol'
+import Vue2LeafletLocatecontrol from "vue2-leaflet-locatecontrol";
+import axios from "axios";
 
 // Icon fix
 delete L.Icon.Default.prototype._getIconUrl;
@@ -42,7 +46,7 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    'v-locatecontrol': Vue2LeafletLocatecontrol
+    "v-locatecontrol": Vue2LeafletLocatecontrol,
   },
   data() {
     return {
@@ -54,30 +58,42 @@ export default {
       bounds: null,
       markerLatLng: [0, 0],
       markerAdded: false,
-      markerLabel: ""
+      markerLabel: "",
     };
   },
   methods: {
     async handleClick(e) {
-      const provider = new OpenStreetMapProvider();
+      const provider = new OpenStreetMapProvider({
+        params: {
+          "accept-language": "pl", 
+          addressdetails: 1,
+        },
+      });
       this.markerAdded = true;
       this.markerLatLng = [e.latlng.lat, e.latlng.lng];
       this.center = [e.latlng.lat, e.latlng.lng];
-      const results = await provider.search({ query:  e.latlng.lat + ', ' + e.latlng.lng});
-      this.markerLabel = results[0].label
+      const results = await provider.search({
+        query: e.latlng.lat + ", " + e.latlng.lng,
+      });
+      this.markerLabel = results[0].raw.address;
     },
     mapReady() {
       var map = this.$refs.myMap.mapObject;
       const search = new GeoSearchControl({
-        provider: new OpenStreetMapProvider(),
-        style: 'bar',
-        searchLabel: 'Wpisz adres'
+        provider: new OpenStreetMapProvider({
+        params: {
+          "accept-language": "pl", 
+          addressdetails: 1,
+        },
+      }),
+        style: "bar",
+        searchLabel: "Wpisz adres",
       });
       search.addMarker = (t) => {
         this.markerAdded = true;
         this.markerLatLng = [t.y, t.x];
         this.center = [t.y, t.x];
-        this.markerLabel = t.label
+        this.markerLabel = t.raw.address;
       };
       map.addControl(search);
     },

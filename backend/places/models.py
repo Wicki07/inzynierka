@@ -9,6 +9,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=1000, blank=False, default='')
     localization = models.CharField(max_length=200, blank=False, default='')
+    title = models.CharField(max_length=200, blank=False, default='')
     street = models.CharField(max_length=200, blank=True, default='')
     city = models.CharField(max_length=200, blank=True, default='')
     post_code = models.CharField(max_length=200, blank=True, default='')
