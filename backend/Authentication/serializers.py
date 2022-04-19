@@ -30,7 +30,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         from_mail = force_text('miejscoweczki@test.pl')
         message = render_to_string('mail/activate.html', {
             'user': user,
-            'activate_link': 'http://localhost:8080/activate/' + generated_activate_key
+            'activate_link': 'http://localhost:8080/auth/activate/' + generated_activate_key
         })
         email = EmailMultiAlternatives( subject, message, from_mail, [user.email])
         email.mixed_subtype = 'related'

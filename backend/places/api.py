@@ -62,7 +62,9 @@ class PostsViewSet(viewsets.ModelViewSet):
     
     # Metoda przygotowuje nam dane do zwrócenia - my potrzebujemy informacji o jednym użytkowniku
     def get_queryset(self):
-        posts = Post.objects.filter(state="województwo " + str(self.request.query_params.get('state')))
+        print("województwo " + str(self.request.query_params.get('state')))
+        state = "województwo " + str(self.request.query_params.get('state'))
+        posts = Post.objects.filter(state=state)
         return posts
 
     # Metoda wybiera z jakiego serializera będziemy korzystać
