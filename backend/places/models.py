@@ -26,5 +26,6 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     rate = models.IntegerField(blank=True, null=True)
+    comment = models.CharField(max_length=1000, blank=True, default='')
     parent_com = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

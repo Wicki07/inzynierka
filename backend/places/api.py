@@ -62,10 +62,30 @@ class PostsViewSet(viewsets.ModelViewSet):
     
     # Metoda przygotowuje nam dane do zwrócenia - my potrzebujemy informacji o jednym użytkowniku
     def get_queryset(self):
-        print("województwo " + str(self.request.query_params.get('state')))
         state = "województwo " + str(self.request.query_params.get('state'))
         posts = Post.objects.filter(state=state)
         return posts
+
+    # Metoda wybiera z jakiego serializera będziemy korzystać
+    def get_serializer_class(self):
+        return self.serializer_classes.get(self.action, self.default_serializer_class)
+
+class AttachmentsViewSet(viewsets.ModelViewSet):
+    queryset = get_user_model().objects.none()
+    
+    # Lista serializerii dla danech typów zapytań
+    serializer_classes = {
+        'GET': AttachmentSerializer,
+    }
+
+    # Jeżeli danego zapytania nie ma na liście serializer_classes to wykorzystany będzie domyślny
+    default_serializer_class = AttachmentSerializer
+    
+    # Metoda przygotowuje nam dane do zwrócenia - my potrzebujemy informacji o jednym użytkowniku
+    def get_queryset(self):
+        id = self.request.query_params.get('post')
+        attachments = Attachment.objects.filter(post_id=id)
+        return attachments
 
     # Metoda wybiera z jakiego serializera będziemy korzystać
     def get_serializer_class(self):

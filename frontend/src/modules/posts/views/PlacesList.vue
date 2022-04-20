@@ -32,7 +32,7 @@
                 ></v-rating>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="orange lighten-2" text :to="`place/${place.id}`">
+                <v-btn color="orange lighten-2" text @click="() => {$router.push({ name: 'place', params: { place: place, title: place.title.replace(/\s/g, '-') } })}">
                   Wybierz
                 </v-btn>
                 <v-spacer></v-spacer>
