@@ -105,7 +105,6 @@ class CommentsViewSet(viewsets.ModelViewSet):
         id = request.query_params.get('post')
         comments = Comment.objects.filter(post_id=id, parent_com=None)
         serializer = CommentSerializer(comments, many=True)
-        print(serializer.data)
         return Response(serializer.data)
 
 
