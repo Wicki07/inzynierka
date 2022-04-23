@@ -1,5 +1,6 @@
 from rest_framework import serializers 
 from places.models import *
+from django.contrib.auth import get_user_model
  
  
 class PostSerializer(serializers.ModelSerializer):
@@ -15,12 +16,19 @@ class AttachmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
- 
+    name = serializers.CharField(source='user.username')
+    child_comments = serializers.SerializerMethodField()
     class Meta:
         model = Comment
-        fields = ('id',
-                  'user_id',
-                  'post_id',
-                  'rate',
-                  'parent_com',
-                )
+        fields = '__all__'
+
+    def get_child_comments(self, obj):
+        print(self)
+        print(obj.child_comments)
+        if obj.child_comments.exists():
+            newChildComments = []
+            for item in obj.child_comments:
+                newChildComments.append(CommentSerializer(item).data)
+            return newChildComments
+        else:
+            return None

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import json
 
 def upload_path(instance, filename):
 
@@ -16,6 +17,8 @@ class Post(models.Model):
     state = models.CharField(max_length=200, blank=True, default='')
     country = models.CharField(max_length=200, blank=True, default='')
     category = models.CharField(max_length=200, blank=False, default='')
+    ratings = models.FloatField(null=True, blank=True, default=0.0)
+    ratings_amount = models.IntegerField(blank=True, null=True,  default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Attachment(models.Model):
@@ -25,7 +28,11 @@ class Attachment(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    rate = models.IntegerField(blank=True, null=True)
+    rate = models.FloatField(blank=True, null=True)
     comment = models.CharField(max_length=1000, blank=True, default='')
     parent_com = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    @property
+    def child_comments(self):
+        comments = Comment.objects.filter(parent_com=self.id)
+        return comments
