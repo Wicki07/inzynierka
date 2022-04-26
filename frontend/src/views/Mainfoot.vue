@@ -1,5 +1,5 @@
 <template>
-  <v-footer dark color="blue" app class="font-weight-medium">
+  <v-footer dark color="blue" class="font-weight-medium">
     <v-col class="text-center pa-1" cols="12">
       2022 — <strong>Mateusz Wicki</strong>
     </v-col>

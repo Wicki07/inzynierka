@@ -1,74 +1,78 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">Welcome to Vuetify</h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br />please join our online
-          <a href="https://community.vuetifyjs.com" target="_blank"
-            >Discord Community</a
-          >
-        </p>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">What's next?</h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
+  <v-container class="d-flex justify-center mt-5 flex-column">
+    <v-row class="d-flex justify-center mt-5 flex-column" id="LacatioSearch">
+      <p class="text-h4 mx-auto">Wyszukaj wspaniałe miejsca przy pomocy</p>
+      <v-col>
+        <v-row>
+          <v-col cols="12" class="text-center">
+            <p class="text-h5 mx-auto">Lokalizacji</p>
+          </v-col>
+          <v-col cols="7">
+            <v-text-field label="Lokalizacja" solo></v-text-field>
+          </v-col>
+          <v-col cols="2">
+            <v-select
+              v-model="distnce"
+              :items="distnces"
+              label="Solo field"
+              solo
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-btn
+              large
+              color="customPrimary"
+              class="text-subtitle-1 font-weight-medium white--text"
+            >
+              Wyszukaj
+            </v-btn>
+          </v-col>
         </v-row>
       </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Important Links</h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
+    </v-row>
+    <v-row id="devider" class="mt-8">
+      <v-col cols="5.5" class="d-flex align-center"
+        ><v-divider></v-divider
+      ></v-col>
+      <v-col cols="1" class="text-center text-h6 font-weight-medium">LUB</v-col>
+      <v-col cols="5.5" class="d-flex align-center"
+        ><v-divider></v-divider
+      ></v-col>
+    </v-row>
+    <v-row class="d-flex justify-center mt-5 flex-column" id="stateChoose">
+      <v-col cols="12" class="text-center">
+        <p class="text-h5 mx-auto">Wyboru województwa</p>
       </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Ecosystem</h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
+      <v-row class="mb-5">
+        <v-col
+          v-for="(state, index) of states"
+          :key="index"
+          cols="12"
+          lg="3"
+          sm="6"
+        >
+          <v-img
+            class="rounded align-center img"
+            src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+            height="200px"
+            @click="$router.push(`posts/list/${state}`)"
+            >
+              <template>
+                <div class="text-center text-h6 white--text">Województwo</div>
+                <div class="text-center text-h6 white--text">{{state}}</div>
+                <div class="text-center text-subtitle-2 white--text">x miejsc</div>
+              </template>
+            </v-img
           >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
+        </v-col>
+      </v-row>
+    </v-row>
+    <v-row class="my-8">
+      <v-divider></v-divider>
+    </v-row>
+    <v-row class="d-flex justify-center flex-column mb-5" id="about">
+      <p class="text-h4 mb-8 mx-auto">Dlaczego warto poznać swoją okolicę</p>
+      <p class="text-body text-center mx-auto">Na współczesnego człowieka narzucone jest wiele wyzwań. Szczególnie w mieście gdzie tempo życia jest zdecydowanie większe oraz panuje wszechobecny hałas. Od blisko 30 lat obserwuje się w Polsce zjawisko jakim jest dezurbanizacja czyli zmniejszanie się liczby ludności szczególnie dużych miast na rzecz wsi. Przyczyną takiego stanu rzeczy jest poszukiwanie przez mieszkańców aglomeracji spokojniejszego i zdrowszego życia poza granicami ich miejsca zamieszkania. Ludzie obecnie częściej podejmują decyzje na podstawie obranej ścieżki zawodowej. Popularność zyskują przeprowadzki w poszukiwaniu pracy lub odpowiednich kwalifikacji np. na studia. Ciągłe zmiany i dążenie do sukcesu mogą doprowadzić do zaburzenia równowagi psychicznej jak i fizycznej oraz do odizolowania się od społeczeństwa. Aby nadążyć za współczesnym światem należy zadbać o odpowiedni odpoczynek. Natura jest idealnym miejscem gdzie można odpocząć oraz uspokoić zabiegane myśli. Dlatego warto wiedzieć gdzie takiego wypoczynku szukać.</p>
     </v-row>
   </v-container>
 </template>
@@ -78,56 +82,82 @@ export default {
   name: "HelloWorld",
 
   data: () => ({
-    ecosystem: [
+    distnce: 5,
+    distnces: [
       {
-        text: "vuetify-loader",
-        href: "https://github.com/vuetifyjs/vuetify-loader",
+        text: "+5km",
+        value: 5,
       },
       {
-        text: "github",
-        href: "https://github.com/vuetifyjs/vuetify",
+        text: "+10km",
+        value: 10,
       },
       {
-        text: "awesome-vuetify",
-        href: "https://github.com/vuetifyjs/awesome-vuetify",
+        text: "+15km",
+        value: 15,
+      },
+      {
+        text: "+20km",
+        value: 20,
+      },
+      {
+        text: "+25km",
+        value: 25,
+      },
+      {
+        text: "+30km",
+        value: 30,
+      },
+      {
+        text: "+35km",
+        value: 35,
+      },
+      {
+        text: "+40km",
+        value: 40,
+      },
+      {
+        text: "+45km",
+        value: 45,
+      },
+      {
+        text: "+50km",
+        value: 50,
       },
     ],
-    importantLinks: [
-      {
-        text: "Documentation",
-        href: "https://vuetifyjs.com",
-      },
-      {
-        text: "Chat",
-        href: "https://community.vuetifyjs.com",
-      },
-      {
-        text: "Made with Vuetify",
-        href: "https://madewithvuejs.com/vuetify",
-      },
-      {
-        text: "Twitter",
-        href: "https://twitter.com/vuetifyjs",
-      },
-      {
-        text: "Articles",
-        href: "https://medium.com/vuetify",
-      },
-    ],
-    whatsNext: [
-      {
-        text: "Explore components",
-        href: "https://vuetifyjs.com/components/api-explorer",
-      },
-      {
-        text: "Select a layout",
-        href: "https://vuetifyjs.com/getting-started/pre-made-layouts",
-      },
-      {
-        text: "Frequently Asked Questions",
-        href: "https://vuetifyjs.com/getting-started/frequently-asked-questions",
-      },
+    states: [
+      "dolnośląskie",
+      "kujawsko-pomorskie",
+      "łódzkie",
+      "lubeskie",
+      "lubuskie",
+      "małopolskie",
+      "mazowieckie",
+      "opolskie",
+      "podkarpackie",
+      "podlaskie",
+      "pomorskie",
+      "śląskie",
+      "świętokrzyskie",
+      "warmińsko-mazurskie",
+      "wielkopolskie",
+      "zachodniopomorskie",
     ],
   }),
+  computed: {
+    width() {
+      return window.innerWidth;
+    },
+  },
+  methods: {
+    capitalizeFirstLetter(string) {
+      return string[0].toUpperCase() + string.slice(1);
+    },
+  },
 };
 </script>
+<style lang="css" scoped>
+.img :hover {
+  cursor: pointer;
+}
+</style>
