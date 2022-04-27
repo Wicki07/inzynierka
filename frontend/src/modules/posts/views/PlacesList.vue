@@ -64,9 +64,15 @@ export default {
     };
   },
   async created() {
-    await axiosAPI.get(`/api/places/?state=${this.state}`).then((res) => {
-      this.places = res.data;
-    });
+    if(this.state) {
+      await axiosAPI.get(`/api/places/?state=${this.state}`).then((res) => {
+        this.places = res.data;
+      });
+    } else {
+      await axiosAPI.get(`/api/placesbylocalization/?lat=${this.$route.query.lat}&lon=${this.$route.query.lon}&distance=${this.$route.query.distance}`).then((res) => {
+        this.places = res.data;
+      });
+    }
   },
   methods: {
     capitalizeFirstLetter(string) {

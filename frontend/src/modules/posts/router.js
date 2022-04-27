@@ -22,6 +22,11 @@ const moduleRoute = {
       component: PlacesList
     },
     {
+      path: "list",
+      props: true,
+      component: PlacesList
+    },
+    {
       name: 'place',
       path: "place/:title?",
       props: true,

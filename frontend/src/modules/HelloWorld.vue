@@ -30,7 +30,7 @@
           </v-col>
           <v-col cols="2">
             <v-select
-              v-model="distnce"
+              v-model="distance"
               :items="distnces"
               label="Solo field"
               solo
@@ -41,7 +41,7 @@
               large
               color="customPrimary"
               class="text-subtitle-1 font-weight-medium white--text"
-              :to="`list/`"
+              @click="goToList"
             >
               Wyszukaj
             </v-btn>
@@ -120,7 +120,7 @@ export default {
   name: "HelloWorld",
 
   data: () => ({
-    distnce: 5,
+    distance: 5,
     distnces: [
       {
         text: "+5km",
@@ -204,6 +204,13 @@ export default {
   methods: {
     capitalizeFirstLetter(string) {
       return string[0].toUpperCase() + string.slice(1);
+    },
+    async goToList() {
+      if(this.select){
+        const results = await this.provider.search({ query: this.search });
+        this.select = results[0]
+      }
+      this.$router.push({ path: 'posts/list', query: { lat: this.select.y, lon: this.select.x, distance: this.distance } })
     },
     async querySelections(val){
       const results = await this.provider.search({ query: val });
