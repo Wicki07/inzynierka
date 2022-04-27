@@ -49,11 +49,7 @@
 </template>
 <script>
 import { axiosAPI } from "@/axiosAPI";
-import LocalizationSelect from "../components/LocalizationSelect.vue";
 export default {
-  components: {
-    LocalizationSelect,
-  },
   props: {
     state: {
       type: String,

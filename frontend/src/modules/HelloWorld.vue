@@ -8,7 +8,25 @@
             <p class="text-h5 mx-auto">Lokalizacji</p>
           </v-col>
           <v-col cols="7">
-            <v-text-field label="Lokalizacja" solo></v-text-field>
+            <v-autocomplete
+              v-model="select"
+              :items="items"
+              :search-input.sync="search"
+              item-text="label"
+              return-object
+              label="Lokalizacja"
+              solo
+            >
+              <template #no-data>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Brak danych
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-autocomplete>
           </v-col>
           <v-col cols="2">
             <v-select
@@ -23,6 +41,7 @@
               large
               color="customPrimary"
               class="text-subtitle-1 font-weight-medium white--text"
+              :to="`list/`"
             >
               Wyszukaj
             </v-btn>
@@ -56,14 +75,15 @@
             src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
             height="200px"
             @click="$router.push(`posts/list/${state}`)"
-            >
-              <template>
-                <div class="text-center text-h6 white--text">Województwo</div>
-                <div class="text-center text-h6 white--text">{{state}}</div>
-                <div class="text-center text-subtitle-2 white--text">x miejsc</div>
-              </template>
-            </v-img
           >
+            <template>
+              <div class="text-center text-h6 white--text">Województwo</div>
+              <div class="text-center text-h6 white--text">{{ state }}</div>
+              <div class="text-center text-subtitle-2 white--text">
+                x miejsc
+              </div>
+            </template>
+          </v-img>
         </v-col>
       </v-row>
     </v-row>
@@ -72,12 +92,30 @@
     </v-row>
     <v-row class="d-flex justify-center flex-column mb-5" id="about">
       <p class="text-h4 mb-8 mx-auto">Dlaczego warto poznać swoją okolicę</p>
-      <p class="text-body text-center mx-auto">Na współczesnego człowieka narzucone jest wiele wyzwań. Szczególnie w mieście gdzie tempo życia jest zdecydowanie większe oraz panuje wszechobecny hałas. Od blisko 30 lat obserwuje się w Polsce zjawisko jakim jest dezurbanizacja czyli zmniejszanie się liczby ludności szczególnie dużych miast na rzecz wsi. Przyczyną takiego stanu rzeczy jest poszukiwanie przez mieszkańców aglomeracji spokojniejszego i zdrowszego życia poza granicami ich miejsca zamieszkania. Ludzie obecnie częściej podejmują decyzje na podstawie obranej ścieżki zawodowej. Popularność zyskują przeprowadzki w poszukiwaniu pracy lub odpowiednich kwalifikacji np. na studia. Ciągłe zmiany i dążenie do sukcesu mogą doprowadzić do zaburzenia równowagi psychicznej jak i fizycznej oraz do odizolowania się od społeczeństwa. Aby nadążyć za współczesnym światem należy zadbać o odpowiedni odpoczynek. Natura jest idealnym miejscem gdzie można odpocząć oraz uspokoić zabiegane myśli. Dlatego warto wiedzieć gdzie takiego wypoczynku szukać.</p>
+      <p class="text-body text-center mx-auto">
+        Na współczesnego człowieka narzucone jest wiele wyzwań. Szczególnie w
+        mieście gdzie tempo życia jest zdecydowanie większe oraz panuje
+        wszechobecny hałas. Od blisko 30 lat obserwuje się w Polsce zjawisko
+        jakim jest dezurbanizacja czyli zmniejszanie się liczby ludności
+        szczególnie dużych miast na rzecz wsi. Przyczyną takiego stanu rzeczy
+        jest poszukiwanie przez mieszkańców aglomeracji spokojniejszego i
+        zdrowszego życia poza granicami ich miejsca zamieszkania. Ludzie obecnie
+        częściej podejmują decyzje na podstawie obranej ścieżki zawodowej.
+        Popularność zyskują przeprowadzki w poszukiwaniu pracy lub odpowiednich
+        kwalifikacji np. na studia. Ciągłe zmiany i dążenie do sukcesu mogą
+        doprowadzić do zaburzenia równowagi psychicznej jak i fizycznej oraz do
+        odizolowania się od społeczeństwa. Aby nadążyć za współczesnym światem
+        należy zadbać o odpowiedni odpoczynek. Natura jest idealnym miejscem
+        gdzie można odpocząć oraz uspokoić zabiegane myśli. Dlatego warto
+        wiedzieć gdzie takiego wypoczynku szukać.
+      </p>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+
 export default {
   name: "HelloWorld",
 
@@ -143,7 +181,21 @@ export default {
       "wielkopolskie",
       "zachodniopomorskie",
     ],
+    provider: new OpenStreetMapProvider({
+      params: {
+        "accept-language": "pl",
+        addressdetails: 1,
+      },
+    }),
+    search: null,
+    select: null,
+    items:[]
   }),
+  watch: {
+    search (val) {
+      val && val !== this.select && this.querySelections(val)
+    },
+  },
   computed: {
     width() {
       return window.innerWidth;
@@ -153,6 +205,14 @@ export default {
     capitalizeFirstLetter(string) {
       return string[0].toUpperCase() + string.slice(1);
     },
+    async querySelections(val){
+      const results = await this.provider.search({ query: val });
+      this.items = results.map((item) => ({
+        ...item,
+        fullLabel: item.label,
+        label: item.label.length < 70 ? item.label : `${item.label.slice(0, 70)}...` 
+      }))
+    }
   },
 };
 </script>
