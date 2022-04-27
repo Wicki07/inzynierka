@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.decorators import action
 import json
 from django.http import JsonResponse
+import math
 
 class PostAPI(generics.GenericAPIView):
     serializer_class = PostSerializer
@@ -55,6 +56,9 @@ class PostAPI(generics.GenericAPIView):
 class PostsViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.none()
     
+    authentication_classes = []
+    permission_classes = []
+    
     # Lista serializerii dla danech typów zapytań
     serializer_classes = {
         'GET': PostSerializer,
@@ -63,7 +67,6 @@ class PostsViewSet(viewsets.ModelViewSet):
     # Jeżeli danego zapytania nie ma na liście serializer_classes to wykorzystany będzie domyślny
     default_serializer_class = PostSerializer
     
-    # Metoda przygotowuje nam dane do zwrócenia - my potrzebujemy informacji o jednym użytkowniku
     def get_queryset(self):
         state = "województwo " + str(self.request.query_params.get('state'))
         posts = Post.objects.filter(state=state)
@@ -73,14 +76,60 @@ class PostsViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return self.serializer_classes.get(self.action, self.default_serializer_class)
 
+class PostsByLocalizationViewSet(viewsets.ModelViewSet):
+    queryset = get_user_model().objects.none()
+    
+    authentication_classes = []
+    permission_classes = []
+    
+    # Lista serializerii dla danech typów zapytań
+    serializer_classes = {
+        'GET': PostSerializer,
+    }
+
+    # Jeżeli danego zapytania nie ma na liście serializer_classes to wykorzystany będzie domyślny
+    default_serializer_class = PostSerializer
+
+    def calcCrow(self, _lat1, lon1, _lat2, lon2):
+        R = 6371
+        dLat = self.toRad(_lat2 - _lat1);
+        dLon = self.toRad(lon2 - lon1);
+        lat1 = self.toRad(_lat1);
+        lat2 = self.toRad(_lat2);
+
+        a = math.sin(dLat / 2) * math.sin(dLat / 2) + math.sin(dLon / 2) * math.sin(dLon / 2) * math.cos(lat1) * math.cos(lat2)
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+        return R * c
+
+    def toRad(self, Value):
+        return (Value * math.pi) / 180
+
+    def get_queryset(self):
+        lat = str(self.request.query_params.get('lat'))
+        lon = str(self.request.query_params.get('lon'))
+        distance = float(str(self.request.query_params.get('distance')))
+        returnPosts = []
+        data = Post.objects.all()
+        for post in data:
+            postDistance = self.calcCrow(float(lat), float(lon), float(post.localization.split(",")[0]), float(post.localization.split(",")[1]))
+            if(postDistance <= distance):
+                returnPosts.append(post)
+        return returnPosts
+
+    # Metoda wybiera z jakiego serializera będziemy korzystać
+    def get_serializer_class(self):
+        return self.serializer_classes.get(self.action, self.default_serializer_class)
+
 class AttachmentsViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.none()
     
+    authentication_classes = []
+    permission_classes = []
+
     # Lista serializerii dla danech typów zapytań
     serializer_classes = {
         'GET': AttachmentSerializer,
     }
-
     # Jeżeli danego zapytania nie ma na liście serializer_classes to wykorzystany będzie domyślny
     default_serializer_class = AttachmentSerializer
     
@@ -100,13 +149,14 @@ class CommentsViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
     default_serializer_class = CommentSerializer
+    authentication_classes = []
+    permission_classes = []
     
     def list(self, request):
         id = request.query_params.get('post')
         comments = Comment.objects.filter(post_id=id, parent_com=None)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
-
 
     def create(self, request):
         user = get_user_model().objects.filter(username=request.data['user']).first()
