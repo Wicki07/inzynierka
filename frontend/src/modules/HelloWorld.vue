@@ -115,10 +115,12 @@
 
 <script>
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+import locationSearch from "./posts/mixins/locationSearch"
 
 export default {
   name: "HelloWorld",
 
+  mixins: [locationSearch],
   data: () => ({
     distance: 5,
     distnces: [
@@ -181,12 +183,6 @@ export default {
       "wielkopolskie",
       "zachodniopomorskie",
     ],
-    provider: new OpenStreetMapProvider({
-      params: {
-        "accept-language": "pl",
-        addressdetails: 1,
-      },
-    }),
     search: null,
     select: null,
     items:[]
