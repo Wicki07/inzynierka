@@ -23,8 +23,6 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_child_comments(self, obj):
-        print(self)
-        print(obj.child_comments)
         if obj.child_comments.exists():
             newChildComments = []
             for item in obj.child_comments:

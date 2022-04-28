@@ -17,19 +17,8 @@ import math
 
 class PostAPI(generics.GenericAPIView):
     serializer_class = PostSerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = [permissions.IsAuthenticated,]
-
-    def get(self, request, *args, **kwargs):
-        if (self.request.query_params.get('id')):
-            id = self.request.query_params.get('id')
-            posts = Post.objects.filter(id=id).first()
-            serializer = PostSerializer(posts)
-            return Response(serializer.data)
-        else:
-            posts = Post.objects.all()
-            serializer = PostSerializer(posts, many=True)
-            return Response(serializer.data)
+    authentication_classes = ()
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         user = get_user_model().objects.filter(username=request.user).first()
@@ -71,6 +60,28 @@ class PostsViewSet(viewsets.ModelViewSet):
         state = "województwo " + str(self.request.query_params.get('state'))
         posts = Post.objects.filter(state=state)
         return posts
+
+    # Metoda wybiera z jakiego serializera będziemy korzystać
+    def get_serializer_class(self):
+        return self.serializer_classes.get(self.action, self.default_serializer_class)
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = get_user_model().objects.none()
+    
+    authentication_classes = []
+    permission_classes = []
+    
+    # Lista serializerii dla danech typów zapytań
+    serializer_classes = {
+        'GET': PostSerializer,
+    }
+
+    # Jeżeli danego zapytania nie ma na liście serializer_classes to wykorzystany będzie domyślny
+    default_serializer_class = PostSerializer
+    
+    def get_queryset(self):
+        id = self.request.query_params.get('id')
+        post = Post.objects.filter(id=id)
+        return post
 
     # Metoda wybiera z jakiego serializera będziemy korzystać
     def get_serializer_class(self):
