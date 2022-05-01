@@ -3,9 +3,6 @@
     <v-row id="comments">
       <v-col cols="12">
         <v-card-title>Komentarze</v-card-title>
-        <v-card-subtitle
-          >Naciśnij na komentarz by na niego odpowiedzić</v-card-subtitle
-        >
       </v-col>
       <comment-field :comments="comments" @replay="replay"></comment-field>
       <v-col cols="12">
