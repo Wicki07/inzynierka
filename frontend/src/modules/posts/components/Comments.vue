@@ -4,7 +4,8 @@
       <v-col cols="12">
         <v-card-title>Komentarze</v-card-title>
       </v-col>
-      <comment-field :comments="comments" @replay="replay"></comment-field>
+      <comment-field :place="place" :comments="comments" @replay="replay" 
+            @getComments="getComments"></comment-field>
       <v-col cols="12">
         <v-expansion-panels v-model="commentPanel" flat tile popout inset>
           <v-expansion-panel @click="responseTo = null">
