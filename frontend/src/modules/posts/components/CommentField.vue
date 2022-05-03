@@ -71,25 +71,6 @@
         </v-row>
       </div>
     </v-col>
-    <!-- <v-col cols="12">
-      <v-expansion-panels v-model="commentPanel" flat tile popout inset>
-        <v-expansion-panel>
-          <v-expansion-panel-header>Dodaj komentarz</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-textarea
-              rows="2"
-              :auto-grow="true"
-              filled
-              rounded
-              dense
-              v-model="newComment"
-            ></v-textarea>
-            <v-btn @click="saveComment">Zapisz</v-btn>
-            <v-btn @click="cancelComment">Anuluj</v-btn>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-col> -->
   </v-row>
 </template>
 <script>

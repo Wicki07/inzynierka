@@ -4,30 +4,38 @@
       <v-col cols="12">
         <v-card-title>Komentarze</v-card-title>
       </v-col>
-      <comment-field :place="place" :comments="comments" @replay="replay" 
-            @getComments="getComments"></comment-field>
+      <comment-field
+        :place="place"
+        :comments="comments"
+        @replay="replay"
+        @getComments="getComments"
+      ></comment-field>
       <v-col cols="12">
         <v-expansion-panels v-model="commentPanel" flat tile popout inset>
           <v-expansion-panel @click="responseTo = null">
-            <v-expansion-panel-header
-              style="background-color: rgba(52, 94, 107, 0.8) !important"
-            >Dodaj komentarz</v-expansion-panel-header>
-            <v-expansion-panel-content
-              style="background-color: rgba(52, 94, 107, 0.8) !important"
+            <v-expansion-panel-header class="primary--text"
+              >Dodaj komentarz</v-expansion-panel-header
             >
-              <div v-if="parentCommentContent">
-                Odpowiedz na: {{ parentCommentContent }}
+            <v-expansion-panel-content>
+              <div class="mt-6">
+                <v-row class="elevation-10 flex-column mx-0">
+                  <v-row
+                    style="height: 40px"
+                    class="primary lighten-5 rounded-lg rounded-b-0 align-center pl-3 mx-0"
+                  >
+                  </v-row>
+                  <v-col class="align-center pl-5 mx-0">
+                    <v-textarea
+                      v-model="newComment"
+                      label="Twój komentarz"
+                      rows="3"
+                    ></v-textarea>
+                    <v-btn small text color="primary" @click="saveComment()"
+                      >Zatwierdź</v-btn
+                    >
+                  </v-col>
+                </v-row>
               </div>
-              <v-textarea
-                v-model="newComment"
-                rows="2"
-                :auto-grow="true"
-                filled
-                rounded
-                dense
-              ></v-textarea>
-              <v-btn @click="saveComment">Zapisz</v-btn>
-              <v-btn @click="cancelComment">Anuluj</v-btn>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -65,7 +73,7 @@ export default {
   },
   computed: {
     ...mapState({
-      user: (state) => state.user.username
+      user: (state) => state.user.username,
     }),
   },
   watch: {
@@ -99,7 +107,7 @@ export default {
           post: +this.place,
           parent_com: +this.responseTo,
           rate: null,
-          user: this.user
+          user: this.user,
         })
         .then(() => {
           this.getComments();
@@ -117,7 +125,7 @@ export default {
 };
 </script>
 <style>
-  .my-select .v-select__selections .v-select__selection--disabled {
-    color: #fff !important;
-  }
+.my-select .v-select__selections .v-select__selection--disabled {
+  color: #fff !important;
+}
 </style>
