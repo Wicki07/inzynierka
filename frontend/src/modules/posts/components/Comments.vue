@@ -10,7 +10,7 @@
         @replay="replay"
         @getComments="getComments"
       ></comment-field>
-      <v-col cols="12">
+      <v-col cols="12" v-if="user">
         <v-expansion-panels v-model="commentPanel" flat tile popout inset>
           <v-expansion-panel @click="responseTo = null">
             <v-expansion-panel-header class="primary--text"

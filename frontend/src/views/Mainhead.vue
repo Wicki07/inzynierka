@@ -21,7 +21,7 @@
       <v-btn v-if="!isAuthenticated" text :to="'/auth/register'" color="customPrimary" class="text-subtitle-1 font-weight-medium">
         Rejestracja
       </v-btn>
-      <v-btn v-if="isAuthenticated" text :to="'/auth/login'" color="customPrimary" class="text-subtitle-1 font-weight-medium"> {{user}} </v-btn>
+      <v-btn v-if="isAuthenticated" text :to="`/user/${user}`" color="customPrimary" class="text-subtitle-1 font-weight-medium"> {{user}} </v-btn>
       <v-btn v-if="isAuthenticated" text @click="logout" color="customPrimary" class="text-subtitle-1 font-weight-medium">Wyloguj</v-btn>
     </v-row>
   </v-app-bar>

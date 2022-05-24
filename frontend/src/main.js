@@ -9,12 +9,14 @@ import "@mdi/font/css/materialdesignicons.css";
 
 import postsModule from "./modules/posts";
 import authenticationModule from "./modules/authentication";
+import userPanelModule from "./modules/userPanel";
 
 import { registerModules } from "./register-modules";
 
 registerModules({
   posts: postsModule,
   authentication: authenticationModule,
+  userPanel: userPanelModule,
 });
 
 Vue.config.productionTip = false;

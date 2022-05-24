@@ -26,7 +26,7 @@
         </v-row>
         <v-row class="align-center pr-5 mx-0 mt-0 pt-3">
           <v-spacer></v-spacer>
-          <v-btn small text color="primary" @click="replay(idx)">Odpowiedz</v-btn>
+          <v-btn v-if="user" small text color="primary" @click="replay(idx)">Odpowiedz</v-btn>
         </v-row>
       </v-col>
       <v-row v-if="comment.child_comments" class="mr-0 ml-8 mt-2 mb-0">
