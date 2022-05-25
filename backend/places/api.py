@@ -57,8 +57,12 @@ class PostsViewSet(viewsets.ModelViewSet):
     default_serializer_class = PostSerializer
     
     def get_queryset(self):
-        state = "województwo " + str(self.request.query_params.get('state'))
-        posts = Post.objects.filter(state=state)
+        if self.request.query_params.get('state'):
+            state = "województwo " + str(self.request.query_params.get('state'))
+            posts = Post.objects.filter(state=state)
+        else:
+            user = User.objects.get(username=self.request.query_params.get('user'))
+            posts = Post.objects.filter(user_id=user.id)
         return posts
 
     # Metoda wybiera z jakiego serializera będziemy korzystać
