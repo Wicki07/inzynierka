@@ -6,6 +6,7 @@ from .serializers import LoginSerializer, UserSerializer, RegisterSerializer, Us
 from .models import *
 from django.contrib.auth import get_user_model
 from rest_framework import status
+from django.contrib.auth.models import User
 
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -29,6 +30,17 @@ class LoginAPI(generics.GenericAPIView):
         return Response({
             "user": UserSerializer(user, context = self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)[1]
+        })
+
+class PasswordResetAPI(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        user = User.objects.get(username=request.data['username'])
+        user.set_password(request.data['password'])
+        user.save()
+        return Response({
+            "user": UserSerializer(user, context = self.get_serializer_context()).data,
         })
 
 class UserAPI(generics.RetrieveAPIView):
