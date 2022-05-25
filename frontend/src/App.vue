@@ -46,7 +46,6 @@ export default {
   },
   created() {
     // sprawdzenie czy refresh token istnieje
-    console.log(localStorage.getItem("token"));
     if (localStorage.getItem("token")) {
       axiosAPI
         .get("/api/auth/user")

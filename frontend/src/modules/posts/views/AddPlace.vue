@@ -78,10 +78,6 @@ export default {
             "content-type": "multipart/form-data",
           },
         })
-        .catch((err) => {
-          console.log("err");
-          console.log(err);
-        });
     },
     preprareFromData() {
       const formData = new FormData();
@@ -128,7 +124,6 @@ export default {
           };
         };
       });
-      console.log(this.convertedImages);
     },
     resizeMe(img) {
       var canvas = document.createElement("canvas");

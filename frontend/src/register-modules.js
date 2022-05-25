@@ -7,7 +7,6 @@ const registerModule = (name, module) => {
   }
 
   if (module.router) {
-    console.log(name)
     module.router(router);
   }
 };

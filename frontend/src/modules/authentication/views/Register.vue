@@ -100,7 +100,6 @@ export default {
             this.setUser(res.data.user);
           })
           .catch((error) => {
-            console.log(error.response.data);
             this.alertMsg = error.response.data.username[0];
             this.alert = true;
             setTimeout(() => {
