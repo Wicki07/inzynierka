@@ -1,7 +1,7 @@
 const Module = () => import("./Module.vue");
 const Dashboard = () => import("./views/Dashboard.vue");
 const PasswordChange = () => import("./views/PasswordChange.vue");
-const PlacesList = () => import("./views/PlacesList.vue");
+const ManagePosts = () => import("./views/ManagePosts.vue");
 
 const moduleRoute = {
   path: "/user",
@@ -18,9 +18,8 @@ const moduleRoute = {
       component: PasswordChange
     },
     {
-      name: "passwordchange",
       path: "settings/manageposts",
-      component: PlacesList
+      component: ManagePosts
     },
   ]
 };

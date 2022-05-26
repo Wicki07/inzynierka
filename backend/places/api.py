@@ -17,7 +17,7 @@ import math
 
 class PostAPI(generics.GenericAPIView):
     serializer_class = PostSerializer
-    authentication_classes = ()
+    authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
