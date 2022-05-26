@@ -21,6 +21,11 @@ const moduleRoute = {
       path: "settings/manageposts",
       component: ManagePosts
     },
+    {
+      name: "editplace",
+      path: "settings/manageposts/:title?",
+      component: ManagePosts
+    },
   ]
 };
 

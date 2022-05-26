@@ -50,19 +50,24 @@ class PostsViewSet(viewsets.ModelViewSet):
     
     # Lista serializerii dla danech typów zapytań
     serializer_classes = {
-        'GET': PostSerializer,
+        'GET': PostsSerializer,
     }
 
     # Jeżeli danego zapytania nie ma na liście serializer_classes to wykorzystany będzie domyślny
-    default_serializer_class = PostSerializer
+    default_serializer_class = PostsSerializer
     
     def get_queryset(self):
         if self.request.query_params.get('state'):
             state = "województwo " + str(self.request.query_params.get('state'))
             posts = Post.objects.filter(state=state)
+            for post in posts:
+                post['attachments'] = Attachment.objects.filter(post_id=post['id'])
+
         else:
             user = User.objects.get(username=self.request.query_params.get('user'))
             posts = Post.objects.filter(user_id=user.id)
+            for post in posts:
+                post.attachments = Attachment.objects.filter(post_id=post.id)
         return posts
 
     # Metoda wybiera z jakiego serializera będziemy korzystać

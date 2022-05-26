@@ -24,9 +24,19 @@
           <v-row>
             <v-col cols="0" md="4">
               <v-img
+                v-if="place.attachments.length !== 0"
                 class="rounded rounded-r-0"
-                src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+                :src="`http://127.0.0.1:8000${place.attachments[0].image}`
+                "
                 height="200px"
+                width="355.5px"
+              ></v-img>
+              <v-img
+                v-else
+                class="mx-auto"
+                src="../../../assets/default.jpg"
+                height="200px"
+                width="355.5px"
               ></v-img>
             </v-col>
             <v-col cols="7">

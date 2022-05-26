@@ -30,3 +30,12 @@ class CommentSerializer(serializers.ModelSerializer):
             return newChildComments
         else:
             return None
+class PostsSerializer(serializers.ModelSerializer):
+    attachments = serializers.SerializerMethodField()
+    class Meta:
+        model = Post
+        fields = '__all__'
+
+    def get_attachments(self, obj):
+        attachments = Attachment.objects.filter(post_id=obj.id)
+        return AttachmentSerializer(attachments, many=True).data
