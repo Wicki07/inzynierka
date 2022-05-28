@@ -14,5 +14,6 @@ router.register('comments', CommentsViewSet)
 
 urlpatterns = [
     path('api/post', PostAPI.as_view()),
+    path('api/post/<int:pk>/', PostAPI.as_view()),
     path('api/', include(router.urls)),
 ]

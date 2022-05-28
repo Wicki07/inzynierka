@@ -62,9 +62,9 @@ class PostAPI(generics.GenericAPIView):
                 Attachment.objects.create(post_id=post.id, image=f)
             return Response({'message': '{} Post został dodany'}, status=status.HTTP_200_OK)
 
-    def delete(self, request, *args, **kwargs):
-        count = Post.objects.all().delete()
-        return Response({'message': '{} Post został usunięty'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, pk, format=None):
+        Post.objects.get(id=pk).delete()
+        return Response({'message': '{} Post został usunięty'}, status=status.HTTP_204_NO_CONTENT)
 
 class PostsViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.none()

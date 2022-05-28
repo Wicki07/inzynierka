@@ -50,7 +50,10 @@
           @change="onAddFiles"
         ></v-file-input>
       </div>
-      <v-row class="pa-3" v-if="attachments.length !== 0 || imagesUrls.length !== 0">
+      <v-row
+        class="pa-3"
+        v-if="attachments.length !== 0 || imagesUrls.length !== 0"
+      >
         <v-img
           v-for="(img, idx) in attachments"
           :key="`attachment-${idx}`"
@@ -95,6 +98,7 @@
       ref="localizationselect"
     />
     <v-row class="justify-end mb-5">
+      <v-btn color="error mr-2" @click="deletePost">usuń</v-btn>
       <v-btn color="primary lighten-1" @click="addPost">dodaj</v-btn>
     </v-row>
   </div>
@@ -177,18 +181,37 @@ export default {
   },
   methods: {
     removeFile(idx, property) {
-      if (property === "attachments"){
+      if (property === "attachments") {
         this.attachmentsToRemove.push(this.attachments[idx].id);
       }
       this[property].splice(idx, 1);
       this.convertedImages.splice(idx, 1);
       this.images.splice(idx, 1);
     },
+    async deletePost() {
+      await axiosAPI
+        .delete(`/api/post/${this.placeLocal.id}`)
+        .then(() => {
+          this.alertMsg = "Pomyślnie usunięto miejsce";
+          this.alert = true;
+          this.alertType = "success";
+          setTimeout(() => {
+            this.alert = false;
+          }, 5000);
+          this.$router.go(-1)
+        })
+        .catch(() => {
+          this.alertMsg = "Coś poszło nie tak. Spróbuj ponownie";
+          this.alert = true;
+          this.alertType = "error";
+          setTimeout(() => {
+            this.alert = false;
+          }, 5000);
+        });
+    },
     addPost() {
       this.$refs.form.validate();
-      console.log("test");
       if (this.valid && this.$refs.localizationselect.markerLabel) {
-        console.log("if");
         const formData = this.preprareFromData();
         this.convertedImages.forEach((image) => {
           formData.append("images", image, image.name);
