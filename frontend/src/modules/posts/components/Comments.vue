@@ -30,6 +30,18 @@
                       label="Twój komentarz"
                       rows="3"
                     ></v-textarea>
+                    <v-rating
+                      v-model="rate"
+                      empty-icon="mdi-star-outline"
+                      full-icon="mdi-star"
+                      half-icon="mdi-star-half-full"
+                      color="yellow darken-3"
+                      background-color="grey darken-1"
+                      hover
+                      half-increments
+                      length="5"
+                      small
+                    ></v-rating>
                     <v-btn small text color="primary" @click="saveComment()"
                       >Zatwierdź</v-btn
                     >
@@ -69,6 +81,7 @@ export default {
       responseTo: null,
       parentCommentContent: "",
       overlay: false,
+      rate: null,
     };
   },
   computed: {
@@ -85,6 +98,9 @@ export default {
   async created() {
     await this.getComments();
   },
+  async mounted() {
+    await this.getComments();
+  },
   methods: {
     replay(idx, content) {
       this.responseTo = idx;
@@ -92,8 +108,10 @@ export default {
       this.parentCommentContent = content;
     },
     async getComments() {
+      console.log("test");
       this.overlay = true;
       await axiosAPI.get(`/api/comments/?post=${this.place}`).then((res) => {
+        console.log(res.data);
         this.comments = res.data;
       });
       this.overlay = false;
@@ -106,7 +124,7 @@ export default {
           comment: this.newComment,
           post: +this.place,
           parent_com: +this.responseTo,
-          rate: null,
+          rate: this.rate,
           user: this.user,
         })
         .then(() => {

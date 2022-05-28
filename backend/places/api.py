@@ -85,7 +85,7 @@ class PostsViewSet(viewsets.ModelViewSet):
             state = "województwo " + str(self.request.query_params.get('state'))
             posts = Post.objects.filter(state=state)
             for post in posts:
-                post['attachments'] = Attachment.objects.filter(post_id=post['id'])
+                post.attachments = Attachment.objects.filter(post_id=post.id)
 
         else:
             user = User.objects.get(username=self.request.query_params.get('user'))
@@ -199,6 +199,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
     def list(self, request):
         id = request.query_params.get('post')
         comments = Comment.objects.filter(post_id=id, parent_com=None)
+        print(id)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
@@ -209,7 +210,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
             post_id=request.data['post'],
             rate=request.data['rate'],
             comment=request.data['comment'],
-            parent_com=request.data['parent_com'],
+            parent_com=None if request.data['parent_com'] == 0 else request.data['parent_com'],
         )
         sum = 0
         amount = 0
@@ -219,7 +220,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
                 amount += 1
                 sum += comment.rate
         post = Post.objects.filter(id=request.data['post']).first()
-        post.ratings = sum / amount
+        post.ratings = sum / amount if amount != 0 else 0
         post.ratings_amount = amount
         post.save()
         return Response(request.data)
