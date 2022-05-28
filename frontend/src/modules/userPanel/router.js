@@ -2,6 +2,7 @@ const Module = () => import("./Module.vue");
 const Dashboard = () => import("./views/Dashboard.vue");
 const PasswordChange = () => import("./views/PasswordChange.vue");
 const ManagePosts = () => import("./views/ManagePosts.vue");
+const EditPlace = () => import("./views/EditPlace.vue");
 
 const moduleRoute = {
   path: "/user",
@@ -24,7 +25,8 @@ const moduleRoute = {
     {
       name: "editplace",
       path: "settings/manageposts/:title?",
-      component: ManagePosts
+      props: true,
+      component: EditPlace
     },
   ]
 };

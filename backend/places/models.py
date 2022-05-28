@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 import json
 
 def upload_path(instance, filename):
-
     return '/'.join(['posts',str(instance.post_id),filename])
 
 class Post(models.Model):
@@ -24,6 +23,10 @@ class Post(models.Model):
 class Attachment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     image = models.ImageField(blank=True, null=True, upload_to=upload_path)
+
+    def delete(self):
+        self.image.delete()
+        super(Attachment, self).delete()
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

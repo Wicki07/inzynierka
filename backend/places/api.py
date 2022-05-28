@@ -14,29 +14,53 @@ from rest_framework.decorators import action
 import json
 from django.http import JsonResponse
 import math
+import os
 
 class PostAPI(generics.GenericAPIView):
     serializer_class = PostSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
+    def deleteFile(path):
+        if os.path.isfile(path):
+            os.remove(path)
+       
     def post(self, request, *args, **kwargs):
-        user = get_user_model().objects.filter(username=request.user).first()
-        post = Post.objects.create(
-            user_id=user.id, 
-            localization=request.data['localization'], 
-            title=request.data['title'], 
-            description=request.data['description'], 
-            street=request.data['street'], 
-            city=request.data['city'], 
-            post_code=request.data['post_code'], 
-            state=request.data['state'], 
-            country=request.data['country'], 
-            category=request.data['category']
-        )
-        for f in request.FILES.getlist('images'):
-            Attachment.objects.create(post_id=post.id, image=f)
-        return Response({'message': '{} Post został dodany'}, status=status.HTTP_200_OK)
+        if (request.data['id']):
+            post = Post.objects.get(id=request.data['id'])
+            post.localization=request.data['localization'] 
+            post.title=request.data['title'] 
+            post.description=request.data['description'] 
+            post.street=request.data['street'] 
+            post.city=request.data['city'] 
+            post.post_code=request.data['post_code'] 
+            post.state=request.data['state'] 
+            post.country=request.data['country'] 
+            post.category=request.data['category']
+            for f in request.FILES.getlist('images'):
+                Attachment.objects.create(post_id=post.id, image=f)
+            for attachment in request.data['attachmentsToRemove']:
+                att = Attachment.objects.get(id=attachment)
+                att.delete()
+            post.save()
+            return Response({'message': '{} Post został zaktualizowany'}, status=status.HTTP_200_OK)
+        else:
+            user = get_user_model().objects.filter(username=request.user).first()
+            post = Post.objects.create(
+                user_id=user.id, 
+                localization=request.data['localization'], 
+                title=request.data['title'], 
+                description=request.data['description'], 
+                street=request.data['street'], 
+                city=request.data['city'], 
+                post_code=request.data['post_code'], 
+                state=request.data['state'], 
+                country=request.data['country'], 
+                category=request.data['category']
+            )
+            for f in request.FILES.getlist('images'):
+                Attachment.objects.create(post_id=post.id, image=f)
+            return Response({'message': '{} Post został dodany'}, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         count = Post.objects.all().delete()

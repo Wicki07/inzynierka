@@ -48,12 +48,18 @@ export default {
     LMarker,
     "v-locatecontrol": Vue2LeafletLocatecontrol,
   },
+  props: {
+    localization: {
+      type: String,
+      default: "",
+    }
+  },
   data() {
     return {
       url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png",
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      zoom: 3,
+      zoom: 10,
       center: [47.41322, -1.219482],
       bounds: null,
       markerLatLng: [0, 0],
@@ -61,21 +67,19 @@ export default {
       markerLabel: "",
     };
   },
+  async created(){
+    if(this.localization) {
+      await this.assignMarker(this.localization.split(',')[0], this.localization.split(',')[1])
+    }
+  },
+  watch:{
+    async localization(newVal) {
+      await this.assignMarker(newVal.split(',')[0], newVal.split(',')[1])
+    }
+  },
   methods: {
     async handleClick(e) {
-      const provider = new OpenStreetMapProvider({
-        params: {
-          "accept-language": "pl", 
-          addressdetails: 1,
-        },
-      });
-      this.markerAdded = true;
-      this.markerLatLng = [e.latlng.lat, e.latlng.lng];
-      this.center = [e.latlng.lat, e.latlng.lng];
-      const results = await provider.search({
-        query: e.latlng.lat + ", " + e.latlng.lng,
-      });
-      this.markerLabel = results[0].raw.address;
+      await this.assignMarker(e.latlng.lat, e.latlng.lng)
     },
     mapReady() {
       var map = this.$refs.myMap.mapObject;
@@ -97,6 +101,21 @@ export default {
       };
       map.addControl(search);
     },
+    async assignMarker(lat, lng) {
+      const provider = new OpenStreetMapProvider({
+        params: {
+          "accept-language": "pl", 
+          addressdetails: 1,
+        },
+      });
+      this.markerAdded = true;
+      this.markerLatLng = [lat, lng];
+      this.center = [lat, lng];      
+      const results = await provider.search({
+        query: lat + ", " + lng,
+      });
+      this.markerLabel = results[0].raw.address;
+    }
   },
 };
 </script>

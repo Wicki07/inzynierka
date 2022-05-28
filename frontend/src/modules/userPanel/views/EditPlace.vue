@@ -15,21 +15,21 @@
     <p class="text-h4 mt-8">Dodaj miejsce</p>
     <v-form v-model="valid" ref="form">
       <v-select
-        v-model="category"
+        v-model="placeLocal.category"
         :items="categories"
         label="Kategoria *"
         :rules="rules"
       ></v-select>
       <v-text-field
         class="mt-5"
-        v-model="title"
+        v-model="placeLocal.title"
         label="Tytuł *"
         hint="Nazwa pod jaką inni będą mogli wszyukiwać podane miejsce"
         :rules="rules"
       ></v-text-field>
       <v-textarea
         class="mt-5"
-        v-model="description"
+        v-model="placeLocal.description"
         label="Opis *"
         hint="Krótki opis podanego miejsca"
         :rules="rules"
@@ -50,24 +50,50 @@
           @change="onAddFiles"
         ></v-file-input>
       </div>
-      <v-row class="pa-3" v-if="imagesUrls.length !== 0">
+      <v-row class="pa-3" v-if="attachments.length !== 0 || imagesUrls.length !== 0">
+        <v-img
+          v-for="(img, idx) in attachments"
+          :key="`attachment-${idx}`"
+          max-height="100"
+          max-width="160"
+          :src="img.image"
+          class="mr-3"
+        >
+          <v-spacer></v-spacer>
+          <v-btn
+            fab
+            x-small
+            color="primary"
+            @click="removeFile(idx, 'attachments')"
+          >
+            <v-icon dark> mdi-minus </v-icon>
+          </v-btn></v-img
+        >
         <v-img
           v-for="(img, idx) in imagesUrls"
-          :key="idx"
+          :key="`image-${idx}`"
           max-height="100"
           max-width="160"
           :src="img"
           class="mr-3"
         >
           <v-spacer></v-spacer>
-          <v-btn fab x-small color="primary" @click="removeFile(idx)">
+          <v-btn
+            fab
+            x-small
+            color="primary"
+            @click="removeFile(idx, 'imagesUrls')"
+          >
             <v-icon dark> mdi-minus </v-icon>
           </v-btn></v-img
         >
       </v-row>
     </v-form>
     <p class="text-subtitle-1 mb-0 mt-4">Podaj lokalizację miejsca</p>
-    <localization-select ref="localizationselect" />
+    <localization-select
+      :localization="placeLocal.localization"
+      ref="localizationselect"
+    />
     <v-row class="justify-end mb-5">
       <v-btn color="primary lighten-1" @click="addPost">dodaj</v-btn>
     </v-row>
@@ -75,22 +101,35 @@
 </template>
 <script>
 import { axiosAPI } from "@/axiosAPI";
-import LocalizationSelect from "../components/LocalizationSelect.vue";
+import LocalizationSelect from "../../posts/components/LocalizationSelect.vue";
 export default {
   components: {
     LocalizationSelect,
   },
+  props: {
+    title: {
+      type: String,
+      default() {
+        return null;
+      },
+    },
+    place: {
+      type: Object,
+      default() {
+        return null;
+      },
+    },
+  },
   data() {
     return {
       valid: false,
-      localization: "",
-      title: "",
-      category: "",
-      categories: ["Punkt widokowy", "Odpoczynek", "Aktywny wypoczynek"],
-      description: "",
-      images: [],
-      convertedImages: [],
+      attachments: [],
+      attachmentsToRemove: [],
+      placeLocal: {},
       imagesUrls: [],
+      convertedImages: [],
+      categories: ["Punkt widokowy", "Odpoczynek", "Aktywny wypoczynek"],
+      images: [],
       allowedTypes: "image/png, image/jpeg, image/bmp, image/img",
       imageRules: [
         (v) => {
@@ -115,15 +154,41 @@ export default {
       alertType: "error",
     };
   },
+  async created() {
+    if (this.place) {
+      this.placeLocal = this.place;
+      await axiosAPI
+        .get(`/api/attachments/?post=${this.place.id}`)
+        .then((res) => {
+          this.attachments = res.data;
+        });
+    } else {
+      await axiosAPI
+        .get(`/api/postretive?id=${this.title.split("-").pop()}`)
+        .then((res) => {
+          this.placeLocal = res.data[0];
+          axiosAPI
+            .get(`/api/attachments/?post=${res.data[0].id}`)
+            .then((res) => {
+              this.attachments = res.data;
+            });
+        });
+    }
+  },
   methods: {
-    removeFile(idx) {
-      this.imagesUrls.splice(idx, 1);
+    removeFile(idx, property) {
+      if (property === "attachments"){
+        this.attachmentsToRemove.push(this.attachments[idx].id);
+      }
+      this[property].splice(idx, 1);
       this.convertedImages.splice(idx, 1);
       this.images.splice(idx, 1);
     },
     addPost() {
       this.$refs.form.validate();
+      console.log("test");
       if (this.valid && this.$refs.localizationselect.markerLabel) {
+        console.log("if");
         const formData = this.preprareFromData();
         this.convertedImages.forEach((image) => {
           formData.append("images", image, image.name);
@@ -142,12 +207,6 @@ export default {
             setTimeout(() => {
               this.alert = false;
             }, 5000);
-            this.imagesUrls = []
-            this.$refs.form.reset();
-            this.$refs.localizationselect.markerLabel;
-            this.$refs.localizationselect.markerLatLng = [0, 0];
-            this.$refs.localizationselect.markerAdded = false;
-            this.$refs.localizationselect.markerLabel = "";
           })
           .catch(() => {
             this.alertMsg = "Coś poszło nie tak. Spróbuj ponownie";
@@ -173,9 +232,10 @@ export default {
         "localization",
         this.$refs.localizationselect.markerLatLng
       );
-      formData.append("category", this.category);
-      formData.append("title", this.title);
-      formData.append("description", this.description);
+      Object.keys(this.placeLocal).forEach((key) =>
+        formData.append(key, this.placeLocal[key])
+      );
+      formData.append("attachmentsToRemove", this.attachmentsToRemove);
       formData.append("country", markerLabel.country);
       formData.append("post_code", markerLabel.postcode);
       formData.append("state", markerLabel.state);

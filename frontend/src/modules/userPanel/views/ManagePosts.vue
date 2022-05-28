@@ -12,7 +12,7 @@
           @click="
             () => {
               $router.push({
-                name: 'place',
+                name: 'editplace',
                 params: {
                   place: place,
                   title: place.title.replace(/\s/g, '-') + `-${place.id}`,
@@ -21,25 +21,24 @@
             }
           "
         >
-          <v-row>
+          <v-row class="row-size">
             <v-col cols="0" md="4">
               <v-img
                 v-if="place.attachments.length !== 0"
-                class="rounded rounded-r-0"
-                :src="`http://127.0.0.1:8000${place.attachments[0].image}`
-                "
+                class="rounded rounded-r-0 mx-auto ml-md-0 mr-md-auto"
+                :src="`http://127.0.0.1:8000${place.attachments[0].image}`"
                 height="200px"
                 width="355.5px"
               ></v-img>
               <v-img
                 v-else
-                class="mx-auto"
+                class="mx-auto ml-md-0 mr-md-auto"
                 src="../../../assets/default.jpg"
                 height="200px"
                 width="355.5px"
               ></v-img>
             </v-col>
-            <v-col cols="7">
+            <v-col cols="7" class="col-size">
               <v-card-title class="mb-0">{{ place.title }}</v-card-title>
               <v-card-subtitle class="text-caption"
                 ><v-icon small>mdi-map-marker-radius</v-icon
@@ -50,7 +49,7 @@
                   place.description.lenght > 200
                     ? `${place.description.slice(0, 200)}...`
                     : place.description
-                }},
+                }}
                 <v-row class="mt-3">
                   <v-rating
                     readonly
@@ -115,5 +114,20 @@ export default {
 <style scoped>
 .v-rating >>> button {
   padding: 8px 1px;
+}
+.col-size {
+  min-width: 550px;
+}
+.row-size {
+  max-width: 990px;
+}
+
+@media only screen and (max-width: 960px) {
+  .col-size {
+    min-width: 420px;
+  }
+  .row-size {
+  max-width: 880px;
+}
 }
 </style>
