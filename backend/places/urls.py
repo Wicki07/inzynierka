@@ -1,6 +1,6 @@
 from django.urls import path
 from django.urls.conf import path, include
-from .api import PostAPI, PostsViewSet, AttachmentsViewSet, CommentsViewSet, PostsByLocalizationViewSet, PostViewSet
+from .api import PostAPI, PostsViewSet, AttachmentsViewSet, CommentsViewSet, PostsByLocalizationViewSet, PostViewSet, MainScreenPosts
 from knox import views as knox_views
 from rest_framework import routers
 
@@ -14,6 +14,7 @@ router.register('comments', CommentsViewSet)
 
 urlpatterns = [
     path('api/post', PostAPI.as_view()),
+    path('api/mainscreenposts', MainScreenPosts.as_view()),
     path('api/post/<int:pk>/', PostAPI.as_view()),
     path('api/', include(router.urls)),
 ]

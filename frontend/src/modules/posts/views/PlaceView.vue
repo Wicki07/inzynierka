@@ -98,6 +98,7 @@ export default {
     };
   },
   async created() {
+    window.scrollTo(0,0);
     if (this.place) {
       this.placeLocal = this.place;
       await axiosAPI

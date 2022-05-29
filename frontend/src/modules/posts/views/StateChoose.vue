@@ -60,6 +60,9 @@ export default {
       ],
     };
   },
+  created() {
+    window.scrollTo(0,0);
+  },
   methods: {
     capitalizeFirstLetter(string) {
       return string[0].toUpperCase() + string.slice(1);

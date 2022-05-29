@@ -39,3 +39,14 @@ class PostsSerializer(serializers.ModelSerializer):
     def get_attachments(self, obj):
         attachments = Attachment.objects.filter(post_id=obj.id)
         return AttachmentSerializer(attachments, many=True).data
+
+class MainsScreenPostsSerializer(serializers.ModelSerializer):
+    attachment = serializers.SerializerMethodField()
+    count = serializers.IntegerField()
+    class Meta:
+        model = Post
+        fields = ['id', 'state', 'attachment', 'count']
+
+    def get_attachment(self, obj):
+        attachment = Attachment.objects.filter(post_id=obj.id).first()
+        return AttachmentSerializer(attachment).data['image'] if AttachmentSerializer(attachment).data['image'] else None

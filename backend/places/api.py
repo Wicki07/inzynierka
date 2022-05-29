@@ -164,6 +164,12 @@ class PostsByLocalizationViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return self.serializer_classes.get(self.action, self.default_serializer_class)
 
+class MainScreenPosts(generics.GenericAPIView):
+    def get(self, request):
+        data = Post.objects.raw('SELECT p.id, p.state, COUNT(p.id) as count FROM places_post p GROUP BY p.state')
+        serializer = MainsScreenPostsSerializer(data, many=True)
+        return Response(serializer.data)
+
 class AttachmentsViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.none()
     
@@ -199,7 +205,6 @@ class CommentsViewSet(viewsets.ModelViewSet):
     def list(self, request):
         id = request.query_params.get('post')
         comments = Comment.objects.filter(post_id=id, parent_com=None)
-        print(id)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 

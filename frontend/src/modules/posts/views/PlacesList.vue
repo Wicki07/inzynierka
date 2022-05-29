@@ -160,6 +160,7 @@ export default {
   },
   async created() {
     await this.getPlaces()
+    window.scrollTo(0,0);
   },
   methods: {
     async getPlaces() {

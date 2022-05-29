@@ -20,9 +20,7 @@
               <template #no-data>
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>
-                      Brak danych
-                    </v-list-item-title>
+                    <v-list-item-title> Brak danych </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -72,15 +70,17 @@
         >
           <v-img
             class="rounded align-center img"
-            src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+            :src="state.image"
             height="200px"
-            @click="$router.push(`posts/list/${state}`)"
+            @click="$router.push(`posts/list/${state.state}`)"
           >
             <template>
               <div class="text-center text-h6 white--text">Województwo</div>
-              <div class="text-center text-h6 white--text">{{ state }}</div>
+              <div class="text-center text-h6 white--text">
+                {{ state.state }}
+              </div>
               <div class="text-center text-subtitle-2 white--text">
-                x miejsc
+                {{ `Ilość miejsc: ${state.amount}` }}
               </div>
             </template>
           </v-img>
@@ -114,7 +114,8 @@
 </template>
 
 <script>
-import locationSearch from "./posts/mixins/locationSearch"
+import locationSearch from "./posts/mixins/locationSearch";
+import { axiosAPI } from "@/axiosAPI";
 
 export default {
   name: "Main",
@@ -165,30 +166,30 @@ export default {
       },
     ],
     states: [
-      "dolnośląskie",
-      "kujawsko-pomorskie",
-      "łódzkie",
-      "lubeskie",
-      "lubuskie",
-      "małopolskie",
-      "mazowieckie",
-      "opolskie",
-      "podkarpackie",
-      "podlaskie",
-      "pomorskie",
-      "śląskie",
-      "świętokrzyskie",
-      "warmińsko-mazurskie",
-      "wielkopolskie",
-      "zachodniopomorskie",
+      { state: "dolnośląskie" },
+      { state: "kujawsko-pomorskie" },
+      { state: "łódzkie" },
+      { state: "lubeskie" },
+      { state: "lubuskie" },
+      { state: "małopolskie" },
+      { state: "mazowieckie" },
+      { state: "opolskie" },
+      { state: "podkarpackie" },
+      { state: "podlaskie" },
+      { state: "pomorskie" },
+      { state: "śląskie" },
+      { state: "świętokrzyskie" },
+      { state: "warmińsko-mazurskie" },
+      { state: "wielkopolskie" },
+      { state: "zachodniopomorskie" },
     ],
     search: null,
     select: null,
-    items:[]
+    items: [],
   }),
   watch: {
-    search (val) {
-      val && val !== this.select && this.querySelections(val)
+    search(val) {
+      val && val !== this.select && this.querySelections(val);
     },
   },
   computed: {
@@ -196,25 +197,46 @@ export default {
       return window.innerWidth;
     },
   },
+  async created() {
+    await axiosAPI.get("/api/mainscreenposts").then((response) => {
+      const fomatedArray = response.data.reduce(
+        (acc, curr) => ((acc[curr.state.split(" ")[1]] = curr), acc),
+        {}
+      );
+      this.states = this.states.map((val) => ({
+        ...val,
+        amount: fomatedArray[val.state]?.count ? fomatedArray[val.state].count : 0,
+        image: fomatedArray[val.state]?.attachment ? `http://127.0.0.1:8000${fomatedArray[val.state].attachment}` : "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" 
+      }))
+    });
+  },
   methods: {
     capitalizeFirstLetter(string) {
       return string[0].toUpperCase() + string.slice(1);
     },
     async goToList() {
-      if(this.select){
+      if (this.select) {
         const results = await this.provider.search({ query: this.search });
-        this.select = results[0]
+        this.select = results[0];
       }
-      this.$router.push({ path: 'posts/list', query: { lat: this.select.y, lon: this.select.x, distance: this.distance } })
+      this.$router.push({
+        path: "posts/list",
+        query: {
+          lat: this.select.y,
+          lon: this.select.x,
+          distance: this.distance,
+        },
+      });
     },
-    async querySelections(val){
+    async querySelections(val) {
       const results = await this.provider.search({ query: val });
       this.items = results.map((item) => ({
         ...item,
         fullLabel: item.label,
-        label: item.label.length < 70 ? item.label : `${item.label.slice(0, 70)}...` 
-      }))
-    }
+        label:
+          item.label.length < 70 ? item.label : `${item.label.slice(0, 70)}...`,
+      }));
+    },
   },
 };
 </script>

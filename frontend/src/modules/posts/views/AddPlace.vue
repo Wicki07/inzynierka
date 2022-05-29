@@ -115,6 +115,9 @@ export default {
       alertType: "error",
     };
   },
+  created(){
+    window.scrollTo(0,0);
+  },
   methods: {
     removeFile(idx) {
       this.imagesUrls.splice(idx, 1);

@@ -80,6 +80,9 @@ export default {
       username: (state) => state.user.username,
     }),
   },
+  created() {
+    window.scrollTo(0,0);
+  },
   methods: {
     ...mapActions(["setUser"]),
     register() {
