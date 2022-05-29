@@ -26,7 +26,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         generated_activate_key_chars = string.ascii_letters + string.digits
         generated_activate_key = ''.join(random.choice(generated_activate_key_chars) for _ in range(generated_activate_key_size))
         models.UserActivate.objects.create(user_id=user,activate_code=generated_activate_key)
-        subject = force_text('Aktywacja konta w serwisie Miejscóweczki.')
+        subject = force_text('Aktywacja konta w serwisie Miejsca w pytkę.')
         from_mail = force_text('miejscoweczki@test.pl')
         message = render_to_string('mail/activate.html', {
             'user': user,
@@ -44,9 +44,11 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = authenticate(**data)
-        if user and user.is_active:
-            return user
-        raise serializers.ValidationError("Incorrect Credentials")    
+        if user :
+            if user.is_active:  # added user model to OrderedDict that serializer is validating
+                return user  # and in sunny day scenario, return this dict, as everything is fine
+            raise serializers.ValidationError("Konto nie zostało aktywowane")
+        raise serializers.ValidationError("Błędny login lub hasło") 
 
 class UsersActivatedSerializer(serializers.ModelSerializer):
     class Meta:

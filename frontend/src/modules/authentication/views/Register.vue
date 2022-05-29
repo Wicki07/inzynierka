@@ -2,7 +2,7 @@
   <v-container>
     <v-alert
       v-model="alert"
-      type="error"
+      :type="alertType"
       dismissible
       style="position: absolute; top: 16px; z-index: 4"
       transition="slide-x-transition"
@@ -51,6 +51,23 @@
         </v-form>
       </v-col>
     </v-row>
+    <v-dialog v-model="dialog" persistent max-width="400">
+
+      <v-card>
+        <v-card-title class="text-h5">
+          Pomyślnie zarejestrowno
+        </v-card-title>
+        <v-card-text
+          >Na podany mail został wysłany link do aktywacji konta. Konto nieaktywowane zostanie usunięte po 24h.</v-card-text
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="confirmDialog">
+            Zatwierdź
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 <script>
@@ -64,8 +81,10 @@ export default {
       password: "",
       password2: "",
       valid: false,
+      dialog: false,
       alert: false,
       alertMsg: "Coś poszło nie tak! Spróbuj ponownie.",
+      alertType: "error",
       rules: {
         lengthCheck: (value) =>
           (value && value.length >= 3) || "Minimalna ilość znaków to 3.",
@@ -86,10 +105,10 @@ export default {
   },
   methods: {
     ...mapActions(["setUser"]),
-    register() {
+    async register() {
       this.$refs.form.validate();
       if (this.valid) {
-        axios
+        await axios
           .post("http://127.0.0.1:8000/api/auth/register", {
             username: this.username,
             email: this.email,
@@ -98,9 +117,11 @@ export default {
           .then((res) => {
             localStorage.setItem("token", res.data.token);
             this.setUser(res.data.user);
+            this.dialog = true
           })
           .catch((error) => {
             this.alertMsg = error.response.data.username[0];
+            this.alertType = "error";
             this.alert = true;
             setTimeout(() => {
               this.alert = false;
@@ -108,6 +129,10 @@ export default {
           });
       }
     },
+    confirmDialog() {
+      this.dialog = false
+      window.location.replace("http://localhost:8080/");
+    }
   },
 };
 </script>

@@ -165,6 +165,10 @@ class PostsByLocalizationViewSet(viewsets.ModelViewSet):
         return self.serializer_classes.get(self.action, self.default_serializer_class)
 
 class MainScreenPosts(generics.GenericAPIView):
+    
+    authentication_classes = []
+    permission_classes = []
+    
     def get(self, request):
         data = Post.objects.raw('SELECT p.id, p.state, COUNT(p.id) as count FROM places_post p GROUP BY p.state')
         serializer = MainsScreenPostsSerializer(data, many=True)

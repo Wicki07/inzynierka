@@ -6,7 +6,7 @@
       dismissible
       style="position: absolute; top: 16px; z-index: 4"
       transition="slide-x-transition"
-      >Coś poszło nie tak! Spróbuj ponownie.</v-alert
+      >{{ alertMsg }}</v-alert
     >
     <p class="text-h4 my-5">Zaloguj się</p>
     <v-row class="mt-5 align-center py-5">
@@ -53,6 +53,7 @@ export default {
       password: "",
       valid: false,
       alert: false,
+      alertMsg: "Coś poszło nie tak! Spróbuj ponownie.",
       rules: {
         lengthCheck: (value) =>
           (value && value.length >= 3) || "Minimalna ilość znaków to 3.",
@@ -77,7 +78,8 @@ export default {
               path: "/",
             });
           })
-          .catch(() => {
+          .catch((e) => {
+            this.alertMsg = e.response.data.non_field_errors[0];
             this.alert = true;
             setTimeout(() => {
               this.alert = false;

@@ -4,7 +4,7 @@
     <v-btn
       text
       color="customPrimary"
-      class="text-subtitle-1 font-weight-medium"
+      class="text-caption font-weight-medium"
       @click="() => $router.push('/')"
     >
       Przejdź na stronę główną

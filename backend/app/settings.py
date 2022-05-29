@@ -182,3 +182,7 @@ EMAIL_USE_TLS = True
 
 MEDIA_URL = '/files/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'files'))
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.AllowAllUsersModelBackend'
+]

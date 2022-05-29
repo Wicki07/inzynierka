@@ -21,9 +21,15 @@
         ></v-img>
       </v-col>
       <v-spacer></v-spacer>
-      <v-menu offset-y >
+      <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" class="d-md-none d-inline-block" text v-bind="attrs" v-on="on">
+          <v-btn
+            color="primary"
+            class="d-md-none d-inline-block"
+            text
+            v-bind="attrs"
+            v-on="on"
+          >
             <v-icon>mdi-menu</v-icon>
           </v-btn>
         </template>
@@ -33,7 +39,7 @@
               text
               :to="'/auth/login'"
               color="customPrimary"
-              class="text-subtitle-1 font-weight-medium"
+              class="text-caption font-weight-medium"
             >
               Zaloguj
             </v-btn>
@@ -85,7 +91,7 @@
         text
         :to="'/auth/login'"
         color="customPrimary"
-        class="text-subtitle-1 font-weight-medium d-none d-md-inline-flex"
+        class="text-caption font-weight-medium d-none d-md-inline-flex"
       >
         Zaloguj
       </v-btn>
@@ -131,14 +137,7 @@ import { mapState, mapActions } from "vuex";
 import { axiosAPI } from "../axiosAPI";
 export default {
   data() {
-    return {
-      items: [
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me 2" },
-      ],
-    };
+    return {};
   },
   computed: {
     ...mapState({
