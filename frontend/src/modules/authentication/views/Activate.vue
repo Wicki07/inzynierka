@@ -1,21 +1,33 @@
 <template>
   <v-container>
-    <v-card> aktywacja konta </v-card>
+    <p class="text-h4 my-5">{{ this.title }}</p>
+    <v-btn
+      text
+      color="customPrimary"
+      class="text-subtitle-1 font-weight-medium"
+      @click="() => $router.push('/')"
+    >
+      Przejdź na stronę główną
+    </v-btn>
   </v-container>
 </template>
 <script>
 import { axiosAPI } from "../../../axiosAPI";
 export default {
-  data() {},
+  data() {
+    return {
+      title: "",
+    }
+  },
   methods: {},
   created() {
     axiosAPI
       .get(`/api/auth/users-activation/?code=${this.$route.params.code}`)
       .then((res) => {
-        console.log(res);
+        this.title = "Twoje konto zostało aktywowane";
       })
       .catch((err) => {
-        console.log(err);
+        this.title = "Coś poszło nie tak. Spróbuj ponowanie.";
       });
   },
 };

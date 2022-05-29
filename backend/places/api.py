@@ -238,7 +238,6 @@ class CommentsViewSet(viewsets.ModelViewSet):
             return Response(request.data)
 
     def destroy(self, request, pk, format=None):
-        print(pk)
         deletedComment = Comment.objects.get(id=pk)
         postId = deletedComment.post_id
         deletedComment.delete()
