@@ -209,23 +209,48 @@ class CommentsViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        user = get_user_model().objects.filter(username=request.data['user']).first()
-        Comment.objects.create(
-            user_id=user.id, 
-            post_id=request.data['post'],
-            rate=request.data['rate'],
-            comment=request.data['comment'],
-            parent_com=None if request.data['parent_com'] == 0 else request.data['parent_com'],
-        )
+        if (request.data['editedComment']):
+            comment = Comment.objects.get(id=request.data['editedComment'])
+            comment.rate=request.data['rate']
+            comment.comment=request.data['comment']
+            comment.save()
+            return Response(request.data)
+        else:
+            user = get_user_model().objects.filter(username=request.data['user']).first()
+            Comment.objects.create(
+                user_id=user.id, 
+                post_id=request.data['post'],
+                rate=request.data['rate'],
+                comment=request.data['comment'],
+                parent_com=None if request.data['parent_com'] == 0 else request.data['parent_com'],
+            )
+            sum = 0
+            amount = 0
+            comments = Comment.objects.filter(post_id=request.data['post']).all()
+            for comment in comments:
+                if (comment.rate):
+                    amount += 1
+                    sum += comment.rate
+            post = Post.objects.filter(id=request.data['post']).first()
+            post.ratings = sum / amount if amount != 0 else 0
+            post.ratings_amount = amount
+            post.save()
+            return Response(request.data)
+
+    def destroy(self, request, pk, format=None):
+        print(pk)
+        deletedComment = Comment.objects.get(id=pk)
+        postId = deletedComment.post_id
+        deletedComment.delete()
         sum = 0
         amount = 0
-        comments = Comment.objects.filter(post_id=request.data['post']).all()
+        comments = Comment.objects.filter(post_id=postId).all()
         for comment in comments:
             if (comment.rate):
                 amount += 1
                 sum += comment.rate
-        post = Post.objects.filter(id=request.data['post']).first()
+        post = Post.objects.filter(id=postId).first()
         post.ratings = sum / amount if amount != 0 else 0
         post.ratings_amount = amount
         post.save()
-        return Response(request.data)
+        return Response({'message': '{} comment został usunięty'}, status=status.HTTP_204_NO_CONTENT)

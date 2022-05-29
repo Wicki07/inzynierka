@@ -14,6 +14,20 @@
           <p class="primary--text align-center mb-0 font-weight-bold">
             {{ comment.name }}
           </p>
+          <v-rating
+            v-if="comment.rate"
+            readonly
+            empty-icon="mdi-star-outline"
+            full-icon="mdi-star"
+            half-icon="mdi-star-half-full"
+            color="yellow darken-3"
+            background-color="grey darken-1"
+            hover
+            half-increments
+            length="5"
+            :value="comment.rate"
+            small
+          ></v-rating>
           <v-spacer />
           <p
             class="primary--text text--lighten-1 text-body-2 align-center mb-0 mr-3"
@@ -21,12 +35,27 @@
             {{ new Date(comment.created_at).toLocaleString() }}
           </p>
         </v-row>
-        <v-row class="align-center pl-5 mx-0 mt-0 pt-3 ">
+        <v-row class="align-center pl-5 mx-0 mt-0 pt-3">
           <p>{{ comment.comment }}</p>
         </v-row>
         <v-row class="align-center pr-5 mx-0 mt-0 pt-3">
           <v-spacer></v-spacer>
-          <v-btn v-if="user" small text color="primary" @click="replay(idx)">Odpowiedz</v-btn>
+          <v-btn
+            v-if="user === comment.name"
+            small
+            text
+            color="primary"
+            @click="replay(idx, 'edit')"
+            >Edytuj</v-btn
+          >
+          <v-btn
+            v-if="user"
+            small
+            text
+            color="primary"
+            @click="replay(idx, 'replay')"
+            >Odpowiedz</v-btn
+          >
         </v-row>
       </v-col>
       <v-row v-if="comment.child_comments" class="mr-0 ml-8 mt-2 mb-0">
@@ -48,9 +77,10 @@
           ></comment-field>
         </v-col>
       </v-row>
-      <div v-if="comment.replay" class="mt-6">
+      <div v-if="comment.replay || comment.edit" class="mt-6">
         <v-row class="elevation-10 flex-column mx-0">
           <v-row
+            v-if="comment.replay"
             style="height: 40px"
             class="primary lighten-5 rounded-lg rounded-b-0 align-center pl-3 mx-0"
           >
@@ -61,12 +91,44 @@
               {{ comment.name }},
             </p>
             <p class="align-center mb-0">
-              {{ comment.comment.length < 70 ? comment.comment : `${comment.comment.slice(0, 70)}...` }}
+              {{
+                70 > comment.comment.length
+                  ? comment.comment
+                  : `${comment.comment.slice(0, 70)}...`
+              }}
             </p>
           </v-row>
+          <v-row
+            v-else
+            style="height: 40px"
+            class="primary lighten-5 rounded-lg rounded-b-0 align-center pl-3 mx-0"
+          >
+            <p class="align-center mb-0 mr-1">Edycja komentarza</p>
+            <v-rating
+              v-model="rate"
+              empty-icon="mdi-star-outline"
+              full-icon="mdi-star"
+              half-icon="mdi-star-half-full"
+              color="yellow darken-3"
+              background-color="grey darken-1"
+              hover
+              half-increments
+              length="5"
+              small
+            ></v-rating>
+          </v-row>
           <v-col class="align-center pl-5 mx-0">
-            <v-textarea v-model="newComment" label="Twój komentarz" rows="3"></v-textarea>
-          <v-btn small text color="primary" @click="saveComment()">Zatwierdź</v-btn>
+            <v-textarea
+              v-model="newComment"
+              label="Twój komentarz"
+              rows="3"
+            ></v-textarea>
+            <v-btn small text color="primary" @click="saveComment()"
+              >Zatwierdź</v-btn
+            >
+            <v-btn small text color="error" @click="deleteComment(comment.id)"
+              >Usuń</v-btn
+            >
           </v-col>
         </v-row>
       </div>
@@ -110,11 +172,13 @@ export default {
       commentPanel: false,
       newComment: "",
       responseTo: "",
+      editedComment: null,
+      rate: null,
     };
   },
   computed: {
     ...mapState({
-      user: (state) => state.user.username
+      user: (state) => state.user.username,
     }),
   },
   watch: {
@@ -132,25 +196,38 @@ export default {
           comment: this.newComment,
           post: +this.place,
           parent_com: +this.responseTo,
-          rate: null,
-          user: "marik1234"
+          rate: this.rate,
+          user: "marik1234",
+          editedComment: this.editedComment,
         })
         .then(() => {
-          this.$emit("getComments")
+          this.$emit("getComments");
         });
     },
-    replay(localIndex) {
+    replay(localIndex, key) {
       this.commentsLocal = this.commentsLocal.map((comment, index) => {
         if (index === localIndex) {
           this.responseTo = comment.id;
+          if (key === "edit") {
+            this.newComment = comment.comment;
+            this.editedComment = comment.id;
+            this.rate = comment.rate;
+          }
           return {
             ...comment,
-            replay: true,
+            [key]: true,
           };
         } else {
           return comment;
         }
       });
+    },
+    async deleteComment(id) {
+      await axiosAPI
+        .delete(`/api/comments/${id}`)
+        .then(() => {
+          this.$emit("getComments");
+        })
     },
   },
 };

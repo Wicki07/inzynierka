@@ -11,6 +11,7 @@ router.register('postretive', PostViewSet)
 router.register('placesbylocalization', PostsByLocalizationViewSet)
 router.register('attachments', AttachmentsViewSet)
 router.register('comments', CommentsViewSet)
+router.register('comments/<int:pk>/', CommentsViewSet)
 
 urlpatterns = [
     path('api/post', PostAPI.as_view()),
