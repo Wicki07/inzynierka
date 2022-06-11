@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://127.0.0.1:8000";
+const baseURL = process.env.VUE_APP_BACKEND_URL;
 const axiosAPI = axios.create({
   baseURL: baseURL, // Adres do serwera Django
   timeout: 5000,
@@ -19,14 +19,6 @@ axiosAPI.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    if (typeof error.response === "undefined") {
-      alert(
-        "A server/network error occurred. " +
-          "Looks like CORS might be the problem. " +
-          "Sorry about this - we will get it fixed shortly."
-      );
-      return Promise.reject(error);
-    }
 
     if (
       originalRequest.url === baseURL + "/api/auth/logout" &&

@@ -11,6 +11,9 @@ from django.contrib.auth.models import User
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
+    authentication_classes = []
+    permission_classes = []
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data = request.data)
         serializer.is_valid(raise_exception = True)
@@ -22,6 +25,9 @@ class RegisterAPI(generics.GenericAPIView):
 
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
+
+    authentication_classes = []
+    permission_classes = []
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data = request.data)

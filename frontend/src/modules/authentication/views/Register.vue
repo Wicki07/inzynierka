@@ -73,6 +73,7 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
+import { axiosAPI } from "../../../axiosAPI";
 export default {
   data() {
     return {
@@ -108,8 +109,8 @@ export default {
     async register() {
       this.$refs.form.validate();
       if (this.valid) {
-        await axios
-          .post("http://127.0.0.1:8000/api/auth/register", {
+        await axiosAPI
+          .post("/api/auth/register", {
             username: this.username,
             email: this.email,
             password: this.password,
@@ -131,7 +132,7 @@ export default {
     },
     confirmDialog() {
       this.dialog = false
-      window.location.replace("http://localhost:8080/");
+      window.location.replace(process.env.VUE_APP_BASE_URL,);
     }
   },
 };

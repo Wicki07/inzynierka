@@ -11,6 +11,7 @@
     "@mdi/font": "^6.6.96",
     "axios": "^0.26.0",
     "core-js": "^3.6.5",
+    "cross-env": "^7.0.3",
     "esri-leaflet": "^3.0.7",
     "leaflet": "^1.7.1",
     "leaflet-control-geocoder": "^2.4.0",

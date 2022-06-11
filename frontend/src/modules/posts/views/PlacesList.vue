@@ -50,7 +50,7 @@
               <v-col cols="0" md="4">
                 <v-img
                   class="rounded rounded-r-0"
-                  src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+                  :src="`${place.attachments[0] ? baseUrl + place.attachments[0].image : '@/assets/default.jpg'}`"
                   height="200px"
                 ></v-img>
               </v-col>
@@ -151,6 +151,7 @@ export default {
         "wielkopolskie",
         "zachodniopomorskie",
       ],
+      baseUrl: ""
     };
   },
   watch: {
@@ -159,6 +160,7 @@ export default {
     },
   },
   async created() {
+    this.baseUrl = process.env.VUE_APP_BACKEND_URL
     await this.getPlaces()
     window.scrollTo(0,0);
   },

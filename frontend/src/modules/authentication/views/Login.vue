@@ -46,6 +46,7 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
+import { axiosAPI } from "../../../axiosAPI";
 export default {
   data() {
     return {
@@ -66,8 +67,8 @@ export default {
     login() {
       this.$refs.form.validate();
       if (this.valid) {
-        axios
-          .post("http://127.0.0.1:8000/api/auth/login", {
+        axiosAPI
+          .post("/api/auth/login", {
             username: this.username,
             password: this.password,
           })

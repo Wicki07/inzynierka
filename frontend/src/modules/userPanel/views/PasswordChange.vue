@@ -89,7 +89,7 @@ export default {
       this.$refs.form.validate();
       if (this.valid) {
         axiosAPI
-          .post("http://127.0.0.1:8000/api/auth/passwordchange", {
+          .post("/api/auth/passwordchange", {
             username: this.username,
             password: this.password,
           })

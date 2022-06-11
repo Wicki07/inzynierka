@@ -150,7 +150,7 @@ export default {
     ...mapActions(["resetUser"]),
     logout() {
       axiosAPI
-        .post("http://127.0.0.1:8000/api/auth/logout")
+        .post("/api/auth/logout")
         .then(() => {
           this.resetUser();
           this.home();

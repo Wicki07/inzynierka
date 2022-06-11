@@ -26,14 +26,14 @@
               <v-img
                 v-if="place.attachments.length !== 0"
                 class="rounded rounded-r-0 mx-auto ml-md-0 mr-md-auto"
-                :src="`http://127.0.0.1:8000${place.attachments[0].image}`"
+                :src="`${process.env.VUE_APP_BACKEND_URL}${place.attachments[0].image}`"
                 height="200px"
                 width="355.5px"
               ></v-img>
               <v-img
                 v-else
                 class="mx-auto ml-md-0 mr-md-auto"
-                src="../../../assets/default.jpg"
+                src="@/assets/default.jpg"
                 height="200px"
                 width="355.5px"
               ></v-img>
