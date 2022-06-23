@@ -26,7 +26,7 @@
               <v-img
                 v-if="place.attachments.length !== 0"
                 class="rounded rounded-r-0 mx-auto ml-md-0 mr-md-auto"
-                :src="`${process.env.VUE_APP_BACKEND_URL}${place.attachments[0].image}`"
+                :src="`${host}${place.attachments[0].image}`"
                 height="200px"
                 width="355.5px"
               ></v-img>
@@ -95,6 +95,9 @@ export default {
     ...mapState({
       user: (state) => state.user.username,
     }),
+    host(){
+      return process.env.VUE_APP_BACKEND_URL
+    }
   },
   async created() {
     window.scrollTo(0,0);

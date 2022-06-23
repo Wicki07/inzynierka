@@ -41,11 +41,11 @@ export default {
           icon: "mdi-map-marker-radius",
           link: "settings/manageposts"
         },
-        {
-          title: "Zarządaj komentarzami",
-          icon: "mdi-comment-multiple",
-          link: "settings/managecomments"
-        }
+        // {
+        //   title: "Zarządaj komentarzami",
+        //   icon: "mdi-comment-multiple",
+        //   link: "settings/managecomments"
+        // }
       ]
     };
   },

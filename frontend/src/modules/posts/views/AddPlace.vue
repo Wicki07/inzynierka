@@ -139,6 +139,7 @@ export default {
             },
           })
           .then(() => {
+            window.scrollTo(0, 0);
             this.alertMsg = "Pomyślnie dodano miejsce";
             this.alert = true;
             this.alertType = "success";
@@ -153,6 +154,7 @@ export default {
             this.$refs.localizationselect.markerLabel = "";
           })
           .catch(() => {
+            window.scrollTo(0, 0);
             this.alertMsg = "Coś poszło nie tak. Spróbuj ponownie";
             this.alert = true;
             this.alertType = "error";

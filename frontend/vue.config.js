@@ -1,5 +1,5 @@
 module.exports = {
   lintOnSave: false,
-  publicPath: '/miejscoweczki/',
+  publicPath: '/frontend/',
   transpileDependencies: ["vuetify"],
 };

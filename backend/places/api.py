@@ -26,7 +26,7 @@ class PostAPI(generics.GenericAPIView):
             os.remove(path)
        
     def post(self, request, *args, **kwargs):
-        if (request.data['id']):
+        if (request.data.__contains__('id')):
             post = Post.objects.get(id=request.data['id'])
             post.localization=request.data['localization'] 
             post.title=request.data['title'] 
@@ -213,7 +213,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        if (request.data['editedComment']):
+        if (request.data.__contains__('editedComment') and request.data['editedComment'] != None):
             comment = Comment.objects.get(id=request.data['editedComment'])
             comment.rate=request.data['rate']
             comment.comment=request.data['comment']

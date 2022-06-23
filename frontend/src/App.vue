@@ -12,7 +12,7 @@
                   style="width: 64rem;"
                 >
                   <h1 style="font-size: 5rem; font-family: 'Poppins', sans-serif;" >
-                    Miejsca w pytkę
+                    Miejsca na 5
                   </h1>
                 </div>
               </v-row>

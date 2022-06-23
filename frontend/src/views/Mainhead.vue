@@ -16,7 +16,7 @@
           height="75"
           width="100"
           :aspect-ratio="1"
-          src="@/assets/logo.jpg"
+          src="@/assets/logofive.jpg"
           @click="home"
         ></v-img>
       </v-col>

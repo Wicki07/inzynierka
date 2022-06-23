@@ -99,7 +99,7 @@
     />
     <v-row class="justify-end mb-5">
       <v-btn color="error mr-2" @click="deletePost">usuń</v-btn>
-      <v-btn color="primary lighten-1" @click="addPost">dodaj</v-btn>
+      <v-btn color="primary lighten-1" @click="addPost">Zapisz</v-btn>
     </v-row>
   </div>
 </template>
@@ -191,8 +191,9 @@ export default {
     },
     async deletePost() {
       await axiosAPI
-        .delete(`/api/post/${this.placeLocal.id}`)
+        .delete(`/api/post/${this.placeLocal.id}/`)
         .then(() => {
+          window.scrollTo(0, 0);
           this.alertMsg = "Pomyślnie usunięto miejsce";
           this.alert = true;
           this.alertType = "success";
@@ -202,6 +203,7 @@ export default {
           this.$router.go(-1)
         })
         .catch(() => {
+          window.scrollTo(0, 0);
           this.alertMsg = "Coś poszło nie tak. Spróbuj ponownie";
           this.alert = true;
           this.alertType = "error";
@@ -225,7 +227,8 @@ export default {
             },
           })
           .then(() => {
-            this.alertMsg = "Pomyślnie dodano miejsce";
+            window.scrollTo(0, 0);
+            this.alertMsg = "Pomyślnie edytowano miejsce";
             this.alert = true;
             this.alertType = "success";
             setTimeout(() => {
@@ -233,6 +236,7 @@ export default {
             }, 5000);
           })
           .catch(() => {
+            window.scrollTo(0, 0);
             this.alertMsg = "Coś poszło nie tak. Spróbuj ponownie";
             this.alert = true;
             this.alertType = "error";
@@ -241,6 +245,7 @@ export default {
             }, 5000);
           });
       } else {
+            window.scrollTo(0, 0);
         this.alertMsg = "Uzupełnij barkujące pola i spróbuj ponownie";
         this.alert = true;
         this.alertType = "error";
@@ -252,25 +257,51 @@ export default {
     preprareFromData() {
       const formData = new FormData();
       const markerLabel = this.$refs.localizationselect.markerLabel;
-      formData.append(
-        "localization",
-        this.$refs.localizationselect.markerLatLng
-      );
+
       Object.keys(this.placeLocal).forEach((key) =>
         formData.append(key, this.placeLocal[key])
       );
-      formData.append("attachmentsToRemove", this.attachmentsToRemove);
-      formData.append("country", markerLabel.country);
-      formData.append("post_code", markerLabel.postcode);
-      formData.append("state", markerLabel.state);
-      formData.append(
-        "city",
-        markerLabel.city || markerLabel.village || markerLabel.town
-      );
+      if(formData["localization"]) {
+        formData["localization"] = this.$refs.localizationselect.markerLatLng
+      } else {
+        formData.append(
+          "localization",
+          this.$refs.localizationselect.markerLatLng
+        );
+      }
+      if(formData["attachmentsToRemove"]) {
+        formData["attachmentsToRemove"] = this.attachmentsToRemove
+      } else {
+        formData.append("attachmentsToRemove", this.attachmentsToRemove);
+      }
+      if(formData["country"]) {
+        formData["country"] = markerLabel.country
+      } else {
+        formData.append("country", markerLabel.country);
+      }
+      if(formData["post_code"]) {
+        formData["post_code"] = markerLabel.postcode
+      } else {
+        formData.append("post_code", markerLabel.postcode);
+      }
+      if(formData["state"]) {
+        formData["state"] = markerLabel.state
+      } else {
+        formData.append("state", markerLabel.state);
+      }
+      if(formData["city"]) {
+        formData["city"] = markerLabel.city || markerLabel.village || markerLabel.town
+      } else {
+        formData.append("city", markerLabel.city || markerLabel.village || markerLabel.town);
+      }
       const street = `${markerLabel.road || ""} ${
         markerLabel.house_number || ""
       }`;
-      formData.append("street", street.trim());
+      if(formData["street"]) {
+        formData["street"] = street.trim()
+      } else {
+        formData.append("street", street.trim());
+      }
       return formData;
     },
     onAddFiles(files) {

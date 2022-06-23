@@ -132,7 +132,7 @@ export default {
     },
     confirmDialog() {
       this.dialog = false
-      window.location.replace(process.env.VUE_APP_BASE_URL,);
+      window.location.replace(process.env.VUE_APP_BASE_URL);
     }
   },
 };
