@@ -108,10 +108,8 @@ export default {
       this.parentCommentContent = content;
     },
     async getComments() {
-      console.log("test");
       this.overlay = true;
       await axiosAPI.get(`/api/comments/?post=${this.place}`).then((res) => {
-        console.log(res.data);
         this.comments = res.data;
       });
       this.overlay = false;
