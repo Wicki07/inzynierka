@@ -197,7 +197,7 @@ export default {
           post: +this.place,
           parent_com: +this.responseTo,
           rate: this.rate,
-          user: "marik1234",
+          user: this.user,
           editedComment: this.editedComment,
         })
         .then(() => {

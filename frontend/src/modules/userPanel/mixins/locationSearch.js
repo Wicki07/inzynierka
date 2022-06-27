@@ -75,6 +75,7 @@ export default {
           lon: this.select.x,
           distance: this.distance,
         },
+        replace: true,
       });
     },
     async querySelections(val) {

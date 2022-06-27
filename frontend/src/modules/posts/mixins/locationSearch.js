@@ -68,8 +68,8 @@ export default {
         const results = await this.provider.search({ query: this.search });
         this.select = results[0];
       }
-      this.$router.push({
-        path: "posts/list",
+      this.$router.replace({
+        name: 'list',
         query: {
           lat: this.select.y,
           lon: this.select.x,

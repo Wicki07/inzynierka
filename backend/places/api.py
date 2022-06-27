@@ -128,11 +128,11 @@ class PostsByLocalizationViewSet(viewsets.ModelViewSet):
     
     # Lista serializerii dla danech typów zapytań
     serializer_classes = {
-        'GET': PostSerializer,
+        'GET': PostsSerializer,
     }
 
     # Jeżeli danego zapytania nie ma na liście serializer_classes to wykorzystany będzie domyślny
-    default_serializer_class = PostSerializer
+    default_serializer_class = PostsSerializer
 
     def calcCrow(self, _lat1, lon1, _lat2, lon2):
         R = 6371
@@ -158,6 +158,8 @@ class PostsByLocalizationViewSet(viewsets.ModelViewSet):
             postDistance = self.calcCrow(float(lat), float(lon), float(post.localization.split(",")[0]), float(post.localization.split(",")[1]))
             if(postDistance <= distance):
                 returnPosts.append(post)
+        for post in returnPosts:
+            post.attachments = Attachment.objects.filter(post_id=post.id)
         return returnPosts
 
     # Metoda wybiera z jakiego serializera będziemy korzystać

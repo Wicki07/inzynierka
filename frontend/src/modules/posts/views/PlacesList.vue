@@ -98,7 +98,7 @@
               style="min-height: 35px"
               v-for="(item, i) in states"
               :key="i"
-              :to="`${item}`"
+              :to="`${$route.query.lat ? 'list/' + item : item}`"
             >
               <v-list-item-content class="py-0">
                 <v-list-item-title class="text-body-1"
